@@ -1,0 +1,13 @@
+{
+  "name": "pkacademics-informs",
+  "version": "1.0.0",
+  "description": "PKacademics informs - UG Student Portal with admin panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.19.2"
+  }
+}

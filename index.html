@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PKacademics informs — UG Student Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F2545;
+    --hero-photo: url("/hero.jpg");
+    --navy-deep:#081729;
+    --gold:#C79A3D;
+    --gold-light:#E7C877;
+    --red:#8C2F39;
+    --bg:#EEF0F4;
+    --card:#FFFFFF;
+    --ink:#16202B;
+    --ink-soft:#4A5566;
+    --line:#D6DAE2;
+    --green:#2F6B4F;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    background:var(--navy);
+    color:#fff;
+    padding:0 24px;
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 2px 12px rgba(8,23,41,0.25);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:3px;
+    background:linear-gradient(155deg, var(--gold-light), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; color:var(--navy-deep);
+    font-size:16px;
+    flex-shrink:0;
+  }
+  .brand-text{display:flex; flex-direction:column; line-height:1.15;}
+  .brand-text .name{font-family:var(--font-display); font-weight:600; font-size:16.5px; letter-spacing:0.2px;}
+  .brand-text .sub{font-size:10.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold-light); font-weight:600;}
+
+  .level-switch{
+    display:flex; gap:2px; background:rgba(255,255,255,0.08); padding:3px; border-radius:8px;
+  }
+  .level-switch button{
+    background:transparent; border:none; color:rgba(255,255,255,0.65);
+    font-family:var(--font-mono); font-size:12.5px; font-weight:500;
+    padding:7px 12px; border-radius:6px; transition:.15s;
+  }
+  .level-switch button.active{background:var(--gold); color:var(--navy-deep); font-weight:600;}
+  .level-switch button:hover:not(.active){color:#fff; background:rgba(255,255,255,0.1);}
+
+  .hamburger{display:none; background:none; border:none; color:#fff; font-size:22px;}
+  .logout-btn{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    color:#fff; font-size:12.5px; font-weight:600; letter-spacing:.3px;
+    padding:8px 14px; border-radius:7px; white-space:nowrap; flex-shrink:0;
+  }
+  .logout-btn:hover{background:rgba(255,255,255,0.16);}
+
+  /* ===== Nav tabs ===== */
+  .navtabs{
+    background:var(--navy-deep);
+    overflow-x:auto;
+  }
+  .navtabs-inner{
+    max-width:1180px; margin:0 auto; padding:0 24px;
+    display:flex; gap:4px;
+  }
+  .navtabs button{
+    background:none; border:none; color:rgba(255,255,255,0.55);
+    padding:13px 16px; font-size:13.5px; font-weight:500;
+    border-bottom:2.5px solid transparent; white-space:nowrap;
+    display:flex; align-items:center; gap:6px;
+  }
+  .navtabs button.active{color:#fff; border-bottom-color:var(--gold);}
+  .navtabs button:hover:not(.active){color:rgba(255,255,255,0.85);}
+  .navtabs .badge{
+    background:var(--red); color:#fff; font-size:9.5px; font-weight:700;
+    padding:1.5px 5px; border-radius:20px; letter-spacing:0.3px;
+  }
+
+  main{max-width:1180px; margin:0 auto; padding:36px 24px 80px;}
+  .page{display:none; animation:fade .3s ease;}
+  .page.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .page-head{margin-bottom:28px;}
+  .eyebrow{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:8px; display:block;
+  }
+  .page-title{font-family:var(--font-display); font-size:34px; font-weight:600; color:var(--navy-deep); margin-bottom:6px;}
+  .page-desc{color:var(--ink-soft); font-size:15px; max-width:640px;}
+
+  /* ===== Dashboard ===== */
+  .hero{
+    background-image:linear-gradient(100deg, rgba(8,23,41,0.94) 0%, rgba(8,23,41,0.82) 38%, rgba(8,23,41,0.45) 75%), var(--hero-photo);
+    background-size:cover;
+    background-position:center 18%;
+    border-radius:14px;
+    padding:48px 36px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:36px;
+    min-height:360px;
+    display:flex;
+    align-items:center;
+  }
+  .hero-inner{position:relative; z-index:1; max-width:600px;}
+  .hero .eyebrow{color:var(--gold-light);}
+  .hero h1{font-family:var(--font-display); font-size:36px; font-weight:600; margin-bottom:12px; line-height:1.15;}
+  .hero p{color:rgba(255,255,255,0.75); font-size:15px; margin-bottom:22px;}
+  .hero-stats{display:flex; gap:28px; flex-wrap:wrap;}
+  .hero-stat .num{font-family:var(--font-mono); font-size:22px; font-weight:600; color:var(--gold-light);}
+  .hero-stat .label{font-size:11.5px; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.6px;}
+
+  .grid-cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:16px; margin-bottom:40px;}
+  .nav-card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px; display:flex; flex-direction:column; gap:10px;
+    transition:.18s; cursor:pointer; position:relative;
+  }
+  .nav-card:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(15,37,69,0.1); border-color:var(--gold);}
+  .nav-card .icon{
+    width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); font-size:18px;
+  }
+  .nav-card h3{font-family:var(--font-display); font-size:18px; font-weight:600; color:var(--navy-deep);}
+  .nav-card p{font-size:13px; color:var(--ink-soft);}
+  .nav-card .badge-new{
+    position:absolute; top:16px; right:16px;
+    background:var(--red); color:#fff; font-size:9px; font-weight:700; letter-spacing:.4px;
+    padding:2px 6px; border-radius:20px; text-transform:uppercase;
+  }
+
+  .section-label{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:600; margin:0 0 14px; display:flex; align-items:center; gap:10px;
+  }
+  .section-label::after{content:""; flex:1; height:1px; background:var(--line);}
+
+  /* ===== Index card motif (signature element) ===== */
+  .index-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:4px 4px 10px 10px;
+    position:relative;
+    padding:20px 20px 18px;
+    box-shadow:0 1px 0 var(--line), 0 6px 14px rgba(15,37,69,0.05);
+  }
+  .index-card::before{
+    content:"";
+    position:absolute; top:-1px; left:22px;
+    width:52px; height:10px;
+    background:var(--gold);
+    border-radius:0 0 4px 4px;
+  }
+  .index-card .stamp{
+    position:absolute; top:16px; right:16px;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:0.5px;
+    color:var(--ink-soft); border:1px solid var(--line); border-radius:20px;
+    padding:2px 8px;
+  }
+  .index-card .code{font-family:var(--font-mono); font-weight:600; color:var(--navy); font-size:13px; margin-bottom:4px;}
+  .index-card .title{font-family:var(--font-display); font-weight:600; font-size:17px; color:var(--navy-deep); margin-bottom:10px; padding-right:70px;}
+  .index-card .meta-row{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft); border-top:1px dashed var(--line); padding-top:10px; margin-top:4px;}
+  .index-card .meta-row span{display:flex; align-items:center; gap:5px;}
+
+  /* ===== Timetable ===== */
+  .day-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px;}
+  .day-tabs button{
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    padding:8px 15px; font-size:13px; font-weight:600; color:var(--ink-soft);
+  }
+  .day-tabs button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .timetable-grid{display:grid; gap:12px;}
+  .tt-row{
+    display:grid; grid-template-columns:90px 1fr; gap:16px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  }
+  .tt-time{
+    background:var(--navy); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 4px;
+  }
+  .tt-body{padding:12px 16px;}
+  .tt-body .course{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep);}
+  .tt-body .details{font-size:12.5px; color:var(--ink-soft); margin-top:3px; display:flex; gap:12px; flex-wrap:wrap;}
+  .pill{
+    display:inline-block; font-family:var(--font-mono); font-size:10.5px; font-weight:600;
+    padding:2px 8px; border-radius:20px; background:var(--bg); color:var(--navy); letter-spacing:.3px;
+  }
+  .pill.lab{background:#EAE0F2; color:#5B3B7A;}
+  .pill.tut{background:#FCEBD5; color:#8A5A16;}
+
+  /* ===== Exams ===== */
+  .exam-list{display:grid; gap:12px;}
+  .exam-item{
+    display:grid; grid-template-columns:76px 1fr auto; gap:18px; align-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 18px;
+  }
+  .exam-date{
+    text-align:center; font-family:var(--font-mono); background:var(--bg); border-radius:8px; padding:8px 4px;
+  }
+  .exam-date .d{font-size:20px; font-weight:700; color:var(--red); line-height:1;}
+  .exam-date .m{font-size:10px; text-transform:uppercase; color:var(--ink-soft); letter-spacing:.5px;}
+  .exam-course .code{font-family:var(--font-mono); font-size:12px; color:var(--ink-soft);}
+  .exam-course .name{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep);}
+  .exam-meta{text-align:right; font-size:12.5px; color:var(--ink-soft);}
+  .exam-meta .time{font-weight:600; color:var(--navy);}
+
+  /* ===== Past Questions ===== */
+  .pq-toolbar{display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+  .pq-toolbar input{
+    flex:1; min-width:200px; padding:11px 14px; border:1px solid var(--line); border-radius:8px;
+    font-family:var(--font-body); font-size:14px; background:var(--card);
+  }
+  .pq-toolbar input:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  .pq-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:16px;}
+  .pq-card .years{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;}
+  .yr-chip{
+    font-family:var(--font-mono); font-size:11px; border:1px solid var(--line); border-radius:6px;
+    padding:4px 8px; color:var(--navy); background:var(--bg);
+  }
+
+  /* ===== Registration Guide ===== */
+  .reg-banner{
+    background:linear-gradient(120deg, var(--gold), var(--gold-light));
+    color:var(--navy-deep); border-radius:12px; padding:22px 26px; margin-bottom:30px;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .reg-banner strong{font-family:var(--font-display); font-size:18px;}
+  .reg-steps{display:flex; flex-direction:column; gap:0;}
+  .reg-step{
+    display:grid; grid-template-columns:52px 1fr; gap:18px;
+    padding:22px 0; border-bottom:1px solid var(--line); position:relative;
+  }
+  .reg-step:last-child{border-bottom:none;}
+  .reg-step::before{
+    content:""; position:absolute; left:25px; top:56px; bottom:-6px; width:2px; background:var(--line);
+  }
+  .reg-step:last-child::before{display:none;}
+  .step-num{
+    width:46px; height:46px; border-radius:50%; background:var(--navy); color:var(--gold-light);
+    font-family:var(--font-mono); font-weight:700; font-size:15px;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+  .step-content h4{font-family:var(--font-display); font-size:17.5px; font-weight:600; color:var(--navy-deep); margin-bottom:6px;}
+  .step-content p{font-size:14px; color:var(--ink-soft); margin-bottom:10px;}
+  .step-content ul{padding-left:18px; font-size:13.5px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
+  .doc-list{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .doc-chip{
+    font-size:12px; background:var(--bg); border:1px solid var(--line); border-radius:20px;
+    padding:5px 12px; color:var(--navy); font-weight:500;
+  }
+  .callout{
+    background:#FBEEE9; border-left:3px solid var(--red); border-radius:0 8px 8px 0;
+    padding:12px 16px; font-size:13px; color:#6b2129; margin-top:10px;
+  }
+  .reg-sub-panel{display:none;}
+  .reg-sub-panel.active{display:block; animation:fade .25s ease;}
+  .hall-card{position:relative;}
+  .hall-card .hall-type{
+    position:absolute; top:16px; right:16px; font-family:var(--font-mono); font-size:9.5px;
+    letter-spacing:.4px; text-transform:uppercase; font-weight:700; padding:2px 8px; border-radius:20px;
+  }
+  .hall-type.traditional{background:#E3EEE7; color:var(--green);}
+  .hall-type.mixed{background:#E8ECF3; color:var(--navy);}
+  .hall-card .hall-meta{display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin-top:4px;}
+
+  /* ===== News ===== */
+  .news-list{display:flex; flex-direction:column; gap:14px;}
+  .news-item{
+    display:grid; grid-template-columns:80px 1fr; gap:18px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+  }
+  .news-date{
+    font-family:var(--font-mono); text-align:center; background:var(--bg); border-radius:8px; padding:8px 2px; height:fit-content;
+  }
+  .news-date .d{font-size:18px; font-weight:700; color:var(--navy); line-height:1;}
+  .news-date .m{font-size:9.5px; text-transform:uppercase; color:var(--ink-soft);}
+  .news-item h4{font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--navy-deep); margin-bottom:4px;}
+  .news-item p{font-size:13.5px; color:var(--ink-soft);}
+  .news-tag{
+    display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:10px; letter-spacing:.4px;
+    text-transform:uppercase; padding:2px 8px; border-radius:20px; font-weight:600;
+  }
+  .tag-academic{background:#E3EEE7; color:var(--green);}
+  .tag-general{background:#E8ECF3; color:var(--navy);}
+  .tag-urgent{background:#FBEEE9; color:var(--red);}
+
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--ink-soft);
+    border:1.5px dashed var(--line); border-radius:12px;
+  }
+
+  footer{
+    background:var(--navy-deep); color:rgba(255,255,255,0.6); padding:0;
+  }
+  .footer-contact{
+    max-width:1180px; margin:0 auto; padding:40px 24px 28px;
+    display:grid; grid-template-columns:1.1fr 1fr; gap:32px;
+  }
+  .footer-contact h4{
+    font-family:var(--font-display); color:#fff; font-size:16px; font-weight:600; margin-bottom:12px;
+  }
+  .founder-card{
+    display:flex; align-items:center; gap:14px;
+  }
+  .founder-avatar{
+    width:52px; height:52px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(155deg, var(--gold-light), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; color:var(--navy-deep); font-size:19px;
+  }
+  .founder-name{color:#fff; font-family:var(--font-display); font-weight:600; font-size:15.5px;}
+  .founder-alias{color:var(--gold-light); font-size:12.5px; font-weight:500; margin-bottom:4px;}
+  .contact-line{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; color:rgba(255,255,255,0.75); margin-top:4px;
+  }
+  .contact-line a{color:#fff; font-weight:500;}
+  .contact-line a:hover{color:var(--gold-light);}
+  .social-group{margin-bottom:16px;}
+  .social-group-label{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase;
+    color:rgba(255,255,255,0.4); margin-bottom:8px; display:block;
+  }
+  .social-links{display:flex; gap:8px; flex-wrap:wrap;}
+  .social-links a{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+    border-radius:20px; padding:6px 13px; font-size:12.5px; color:rgba(255,255,255,0.85);
+    transition:.15s;
+  }
+  .social-links a:hover{background:var(--gold); color:var(--navy-deep); border-color:var(--gold);}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,0.08);
+    text-align:center; padding:18px 20px; font-size:12px; color:rgba(255,255,255,0.4);
+  }
+  @media (max-width:720px){
+    .footer-contact{grid-template-columns:1fr;}
+  }
+
+  /* ===== Access gate ===== */
+  #gate{
+    position:fixed; inset:0; z-index:999;
+    background:var(--navy-deep);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  #gate::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:linear-gradient(rgba(8,23,41,0.88), rgba(8,23,41,0.96)), var(--hero-photo);
+    background-size:cover; background-position:center 18%;
+  }
+  .gate-card{
+    position:relative; z-index:1;
+    width:100%; max-width:380px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:16px;
+    padding:32px 28px;
+    text-align:center;
+  }
+  .gate-mark{
+    width:56px; height:56px; border-radius:14px; margin:0 auto 16px;
+    background:linear-gradient(155deg, var(--gold-light), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; color:var(--navy-deep); font-size:20px;
+  }
+  .gate-card h2{font-family:var(--font-display); color:#fff; font-size:22px; font-weight:600; margin-bottom:4px;}
+  .gate-card .gate-sub{color:var(--gold-light); font-size:12.5px; font-weight:500; letter-spacing:.4px; margin-bottom:22px;}
+  .gate-card input{
+    width:100%; padding:12px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.06); color:#fff; font-size:14px; margin-bottom:10px; font-family:var(--font-body);
+  }
+  .gate-card input::placeholder{color:rgba(255,255,255,0.4);}
+  .gate-card input:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  .gate-btn{
+    width:100%; padding:12px; border:none; border-radius:8px; background:var(--gold);
+    color:var(--navy-deep); font-weight:700; font-size:14px; margin-bottom:14px;
+  }
+  .gate-btn:hover{background:var(--gold-light);}
+  .gate-error{
+    color:#F2A6A6; font-size:12.5px; margin:-4px 0 12px; min-height:16px;
+  }
+  .gate-divider{
+    display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.35);
+    font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:16px 0;
+  }
+  .gate-divider::before, .gate-divider::after{content:""; flex:1; height:1px; background:rgba(255,255,255,0.12);}
+  .gate-request{
+    display:block; width:100%; padding:11px; border-radius:8px;
+    border:1px solid rgba(255,255,255,0.18); background:transparent; color:#fff; font-size:13.5px; text-align:center;
+  }
+  .gate-request:hover{background:rgba(255,255,255,0.08);}
+  #gateRequestBox{display:none; margin-top:12px; text-align:left;}
+  #gateRequestBox input{margin-bottom:8px;}
+
+  @media (max-width:720px){
+    .hamburger{display:block;}
+    .level-switch{display:none;}
+    .level-switch.open{display:flex; position:absolute; top:64px; right:16px; background:var(--navy-deep); padding:8px; border-radius:8px; flex-direction:column;}
+    .hero h1{font-size:27px;}
+    .exam-item{grid-template-columns:60px 1fr; }
+    .exam-meta{grid-column:1/-1; text-align:left; padding-top:6px; border-top:1px dashed var(--line);}
+    .news-item{grid-template-columns:56px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-mark">PK</div>
+    <h2 id="gateBrandName">PKacademics informs</h2>
+    <div class="gate-sub" id="gateBrandSub">To the whole wiase of Legon</div>
+
+    <input type="password" id="gatePassword" placeholder="Enter password" autocomplete="off">
+    <div class="gate-error" id="gateError"></div>
+    <button class="gate-btn" id="gateSubmit">Enter</button>
+
+    <div class="gate-divider">or</div>
+
+    <button class="gate-request" id="gateRequestToggle">Request access</button>
+    <div id="gateRequestBox">
+      <input type="text" id="gateName" placeholder="Your full name">
+      <input type="text" id="gateLevel" placeholder="Your level (e.g. 100)">
+      <button class="gate-btn" id="gateRequestSend" style="margin-bottom:0;">Send request on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">PK</div>
+      <div class="brand-text">
+        <span class="name">PK<span style="color:var(--gold-light);">academics</span> informs</span>
+        <span class="sub">To the whole wiase of Legon</span>
+      </div>
+    </div>
+    <div class="level-switch" id="levelSwitch">
+      <button data-level="100" class="active">Level 100</button>
+      <button data-level="200">Level 200</button>
+      <button data-level="300">Level 300</button>
+      <button data-level="400">Level 400</button>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Log out</button>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+  <div class="navtabs">
+    <div class="navtabs-inner" id="navtabs">
+      <button data-page="dashboard" class="active">Dashboard</button>
+      <button data-page="timetable">Timetable</button>
+      <button data-page="exams">Exams</button>
+      <button data-page="pastq">Past Questions</button>
+      <button data-page="register" id="regTabBtn">Registration Guide <span class="badge">L100</span></button>
+      <button data-page="news">News</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <section class="page active" id="page-dashboard">
+    <div class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">PKacademics informs</span>
+        <h1>Everything for your semester, in one place.</h1>
+        <p>Lecture times, exam dates, past questions, and school news — organised by level, so you always know what's next. To the whole wiase of Legon.</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num" id="statCourses">7</div><div class="label">Courses this level</div></div>
+          <div class="hero-stat"><div class="num" id="statExams">6</div><div class="label">Upcoming exams</div></div>
+          <div class="hero-stat"><div class="num" id="statPQ">18</div><div class="label">Past question sets</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-cards">
+      <div class="nav-card" data-goto="timetable">
+        <div class="icon">🗓️</div>
+        <h3>Timetable</h3>
+        <p>See your lecture, tutorial and lab schedule for the week, by day.</p>
+      </div>
+      <div class="nav-card" data-goto="exams">
+        <div class="icon">📝</div>
+        <h3>Exam Schedule</h3>
+        <p>Dates, times and venues for your end-of-semester exams.</p>
+      </div>
+      <div class="nav-card" data-goto="pastq">
+        <div class="icon">📚</div>
+        <h3>Past Questions</h3>
+        <p>Browse past exam questions organised by course code and year.</p>
+      </div>
+      <div class="nav-card" data-goto="register" id="regCard">
+        <span class="badge-new">Level 100</span>
+        <div class="icon">🧾</div>
+        <h3>Registration Guide</h3>
+        <p>Step-by-step walkthrough of manual registration as a fresher.</p>
+      </div>
+      <div class="nav-card" data-goto="news">
+        <div class="icon">📢</div>
+        <h3>School News</h3>
+        <p>The latest announcements about courses, deadlines and campus life.</p>
+      </div>
+    </div>
+
+    <p class="section-label">Today at a glance</p>
+    <div id="dashToday"></div>
+  </section>
+
+  <!-- TIMETABLE -->
+  <section class="page" id="page-timetable">
+    <div class="page-head">
+      <span class="eyebrow" id="ttLevelLabel">Level 100</span>
+      <h1 class="page-title">Weekly Timetable</h1>
+      <p class="page-desc">Sample lecture, tutorial and lab schedule. Swap in your department's real timetable once you have it.</p>
+    </div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div class="timetable-grid" id="ttGrid"></div>
+  </section>
+
+  <!-- EXAMS -->
+  <section class="page" id="page-exams">
+    <div class="page-head">
+      <span class="eyebrow" id="exLevelLabel">Level 100</span>
+      <h1 class="page-title">Exam Schedule</h1>
+      <p class="page-desc">Upcoming end-of-semester exams, in date order. Check your venue the week of, as rooms sometimes change.</p>
+    </div>
+    <div class="exam-list" id="examList"></div>
+  </section>
+
+  <!-- PAST QUESTIONS -->
+  <section class="page" id="page-pastq">
+    <div class="page-head">
+      <span class="eyebrow" id="pqLevelLabel">Level 100</span>
+      <h1 class="page-title">Past Questions</h1>
+      <p class="page-desc">Browse by course. Each set is contributed by students who've taken the course before.</p>
+    </div>
+    <div class="pq-toolbar">
+      <input type="text" id="pqSearch" placeholder="Search by course code or title…">
+    </div>
+    <div class="pq-grid" id="pqGrid"></div>
+  </section>
+
+  <!-- REGISTRATION GUIDE -->
+  <section class="page" id="page-register">
+    <div class="page-head">
+      <span class="eyebrow">For New Students</span>
+      <h1 class="page-title">Manual Registration Guide</h1>
+      <p class="page-desc">Everything a fresher (Level 100) needs to do to complete registration, from admission letter to matriculation.</p>
+    </div>
+    <div class="reg-banner">
+      <span style="font-size:26px;">🎓</span>
+      <div>
+        <strong>Welcome to Legon.</strong>
+        <span style="display:block; font-size:13.5px; margin-top:2px;">This walkthrough is a general guide — always confirm exact dates and requirements with the Academic Affairs Directorate and your school's official portal, since these can change each admissions cycle.</span>
+      </div>
+    </div>
+
+    <div class="day-tabs" id="regSubTabs" style="margin-bottom:26px;">
+      <button data-sub="fresher" class="active">Fresher Registration</button>
+      <button data-sub="course">Course Registration</button>
+      <button data-sub="hall">Hall &amp; Bed Allocation</button>
+    </div>
+
+    <div class="reg-sub-panel active" id="regsub-fresher">
+      <div class="reg-steps" id="regSteps"></div>
+    </div>
+
+    <div class="reg-sub-panel" id="regsub-course">
+      <div class="reg-steps" id="courseRegSteps"></div>
+    </div>
+
+    <div class="reg-sub-panel" id="regsub-hall">
+      <div class="reg-steps" id="hallRegSteps"></div>
+      <p class="section-label" style="margin-top:32px;">Halls &amp; Hostels Directory</p>
+      <div class="grid-cards" id="hallDirectory"></div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="page" id="page-news">
+    <div class="page-head">
+      <span class="eyebrow">Announcements</span>
+      <h1 class="page-title">Latest School News</h1>
+      <p class="page-desc">Course updates, deadlines and campus announcements, most recent first.</p>
+    </div>
+    <div class="news-list" id="newsList"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-contact">
+    <div>
+      <h4>Get in touch</h4>
+      <div class="founder-card">
+        <div class="founder-avatar">PA</div>
+        <div>
+          <div class="founder-name">Paul Kwesi Addo</div>
+          <div class="founder-alias">aka Jarani</div>
+          <div class="contact-line">📞 <a href="tel:0208487547">0208 487 547</a> — call or text</div>
+          <div class="contact-line">💬 <a href="https://wa.me/233208487547" target="_blank" rel="noopener">WhatsApp me</a> for any information needed</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="social-group">
+        <span class="social-group-label">PKacademics informs — official pages</span>
+        <div class="social-links">
+          <a href="#" target="_blank" rel="noopener">TikTok</a>
+          <a href="#" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" target="_blank" rel="noopener">Facebook</a>
+          <a href="#" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+      <div class="social-group">
+        <span class="social-group-label">Follow Jarani — personal page</span>
+        <div class="social-links">
+          <a href="#" target="_blank" rel="noopener">TikTok</a>
+          <a href="#" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" target="_blank" rel="noopener">Facebook</a>
+          <a href="#" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    PKacademics informs is an independent student-built prototype and is not an official University of Ghana platform. Always verify dates and requirements with your department and the official UG portal.
+  </div>
+</footer>
+
+<script>
+// ===================== ACCESS GATE =====================
+// Passwords now live server-side in data.json (settings.gatePassword / adminPassword)
+// and can be changed anytime from the Admin panel at /admin — no file editing needed.
+
+const WHATSAPP_NUMBER = "233208487547"; // Paul Kwesi Addo (Jarani)
+
+const gateEl = document.getElementById('gate');
+const gatePasswordInput = document.getElementById('gatePassword');
+const gateError = document.getElementById('gateError');
+const gateSubmit = document.getElementById('gateSubmit');
+const gateRequestToggle = document.getElementById('gateRequestToggle');
+const gateRequestBox = document.getElementById('gateRequestBox');
+const gateName = document.getElementById('gateName');
+const gateLevel = document.getElementById('gateLevel');
+const gateRequestSend = document.getElementById('gateRequestSend');
+
+function tryEnter(){
+  gateSubmit.disabled = true;
+  gateSubmit.textContent = "Checking…";
+  fetch('/api/verify-gate', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({password: gatePasswordInput.value})
+  })
+  .then(r => r.json())
+  .then(data => {
+    gateSubmit.disabled = false;
+    gateSubmit.textContent = "Enter";
+    if(data.ok){
+      gateEl.style.display = "none";
+      document.body.style.overflow = "auto";
+      loadSiteData();
+    } else {
+      gateError.textContent = "That password isn't right. Try again or request access below.";
+    }
+  })
+  .catch(()=>{
+    gateSubmit.disabled = false;
+    gateSubmit.textContent = "Enter";
+    gateError.textContent = "Couldn't reach the server — try again.";
+  });
+}
+
+gateSubmit.addEventListener('click', tryEnter);
+gatePasswordInput.addEventListener('keydown', (e)=>{
+  if(e.key === "Enter") tryEnter();
+  gateError.textContent = "";
+});
+
+gateRequestToggle.addEventListener('click', ()=>{
+  gateRequestBox.style.display = gateRequestBox.style.display === "block" ? "none" : "block";
+});
+
+gateRequestSend.addEventListener('click', ()=>{
+  const name = gateName.value.trim();
+  const level = gateLevel.value.trim();
+  if(!name){
+    gateName.style.borderColor = "#F2A6A6";
+    gateName.placeholder = "Please enter your name";
+    return;
+  }
+  const msg = `Hi Jarani, I'd like access to PKacademics informs.%0AName: ${encodeURIComponent(name)}%0ALevel: ${encodeURIComponent(level || "Not specified")}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+});
+
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  gatePasswordInput.value = "";
+  gateError.textContent = "";
+  gateRequestBox.style.display = "none";
+  gateName.value = "";
+  gateLevel.value = "";
+  gateEl.style.display = "flex";
+  document.body.style.overflow = "hidden";
+  goTo('dashboard');
+});
+
+// ===================== STATE =====================
+let currentLevel = "100";
+let currentPage = "dashboard";
+let currentDay = "Mon";
+let DATA = {};      // filled from /api/data -> DATA[level] = {courses, exams, pastQ}
+let NEWS = [];
+let HALLS = [];
+let REG_STEPS = [];
+let COURSE_REG_STEPS = [];
+let HALL_REG_STEPS = [];
+
+async function loadSiteData(){
+  const res = await fetch('/api/data');
+  const json = await res.json();
+  DATA = json.levels;
+  NEWS = json.news;
+  HALLS = json.halls;
+  REG_STEPS = json.regSteps;
+  COURSE_REG_STEPS = json.courseRegSteps;
+  HALL_REG_STEPS = json.hallRegSteps;
+  document.getElementById('gateBrandName').textContent = json.siteName;
+  document.getElementById('gateBrandSub').textContent = json.tagline;
+  document.querySelector('.brand-text .name').innerHTML = json.siteName.replace('informs','<span style="color:var(--gold-light);">informs</span>');
+  document.querySelector('.brand-text .sub').textContent = json.tagline;
+  renderAll();
+}
+
+
+// ===================== RENDER HELPERS =====================
+function el(html){
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+
+function renderDashboard(){
+  const lvl = DATA[currentLevel];
+  document.getElementById('statCourses').textContent = new Set(lvl.courses.map(c=>c.code)).size;
+  document.getElementById('statExams').textContent = lvl.exams.length;
+  document.getElementById('statPQ').textContent = lvl.pastQ.reduce((a,c)=>a+c.years.length,0);
+
+  const today = document.getElementById('dashToday');
+  today.innerHTML = "";
+  const day = "Mon"; // sample "today"
+  const todays = lvl.courses.filter(c=>c.day===day);
+  if(todays.length===0){
+    today.appendChild(el(`<div class="empty-state">No classes scheduled — enjoy the free day.</div>`));
+  } else {
+    const grid = el(`<div class="grid-cards"></div>`);
+    todays.forEach(c=>{
+      grid.appendChild(el(`
+        <div class="index-card">
+          <span class="stamp">${day}</span>
+          <div class="code">${c.code}</div>
+          <div class="title">${c.name}</div>
+          <div class="meta-row">
+            <span>⏰ ${c.time}</span>
+            <span>📍 ${c.venue}</span>
+            <span class="pill ${c.type==='Lab'?'lab':c.type==='Tutorial'?'tut':''}">${c.type}</span>
+          </div>
+        </div>
+      `));
+    });
+    today.appendChild(grid);
+  }
+}
+
+function renderTimetable(){
+  document.getElementById('ttLevelLabel').textContent = `Level ${currentLevel}`;
+  const lvl = DATA[currentLevel];
+  const days = ["Mon","Tue","Wed","Thu","Fri"];
+  const dayTabs = document.getElementById('dayTabs');
+  dayTabs.innerHTML = "";
+  days.forEach(d=>{
+    const b = el(`<button data-day="${d}">${d==='Mon'?'Monday':d==='Tue'?'Tuesday':d==='Wed'?'Wednesday':d==='Thu'?'Thursday':'Friday'}</button>`);
+    if(d===currentDay) b.classList.add('active');
+    b.addEventListener('click', ()=>{ currentDay=d; renderTimetable(); });
+    dayTabs.appendChild(b);
+  });
+
+  const grid = document.getElementById('ttGrid');
+  grid.innerHTML = "";
+  const classes = lvl.courses.filter(c=>c.day===currentDay).sort((a,b)=>a.time.localeCompare(b.time));
+  if(classes.length===0){
+    grid.appendChild(el(`<div class="empty-state">No classes on this day for Level ${currentLevel}.</div>`));
+    return;
+  }
+  classes.forEach(c=>{
+    grid.appendChild(el(`
+      <div class="tt-row">
+        <div class="tt-time">${c.time}</div>
+        <div class="tt-body">
+          <div class="course">${c.code} — ${c.name}</div>
+          <div class="details">
+            <span class="pill ${c.type==='Lab'?'lab':c.type==='Tutorial'?'tut':''}">${c.type}</span>
+            <span>📍 ${c.venue}</span>
+          </div>
+        </div>
+      </div>
+    `));
+  });
+}
+
+function renderExams(){
+  document.getElementById('exLevelLabel').textContent = `Level ${currentLevel}`;
+  const list = document.getElementById('examList');
+  list.innerHTML = "";
+  const lvl = DATA[currentLevel];
+  lvl.exams.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(ex=>{
+    list.appendChild(el(`
+      <div class="exam-item">
+        <div class="exam-date"><div class="d">${ex.day}</div><div class="m">${ex.month}</div></div>
+        <div class="exam-course">
+          <div class="code">${ex.code}</div>
+          <div class="name">${ex.name}</div>
+        </div>
+        <div class="exam-meta">
+          <div class="time">${ex.time}</div>
+          <div>${ex.venue}</div>
+        </div>
+      </div>
+    `));
+  });
+}
+
+function renderPastQ(query=""){
+  document.getElementById('pqLevelLabel').textContent = `Level ${currentLevel}`;
+  const grid = document.getElementById('pqGrid');
+  grid.innerHTML = "";
+  const lvl = DATA[currentLevel];
+  const q = query.trim().toLowerCase();
+  const filtered = lvl.pastQ.filter(c => !q || c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+  if(filtered.length===0){
+    grid.appendChild(el(`<div class="empty-state">No courses match "${query}" for Level ${currentLevel}.</div>`));
+    return;
+  }
+  filtered.forEach(c=>{
+    const card = el(`
+      <div class="index-card pq-card">
+        <span class="stamp">${c.years.length} sets</span>
+        <div class="code">${c.code}</div>
+        <div class="title">${c.name}</div>
+        <div class="years"></div>
+      </div>
+    `);
+    const yearsWrap = card.querySelector('.years');
+    c.years.forEach(y=> yearsWrap.appendChild(el(`<span class="yr-chip">${y}</span>`)) );
+    grid.appendChild(card);
+  });
+}
+
+function renderRegister(){
+  const wrap = document.getElementById('regSteps');
+  wrap.innerHTML = "";
+  REG_STEPS.forEach((s, i)=>{
+    const step = el(`
+      <div class="reg-step">
+        <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="step-content">
+          <h4>${s.title}</h4>
+          <p>${s.body}</p>
+          <div class="doc-list"></div>
+        </div>
+      </div>
+    `);
+    const docWrap = step.querySelector('.doc-list');
+    s.items.forEach(it => docWrap.appendChild(el(`<span class="doc-chip">${it}</span>`)));
+    wrap.appendChild(step);
+  });
+  wrap.appendChild(el(`
+    <div class="callout">
+      <strong>Before you go:</strong> Bring photocopies of every original document — offices frequently keep a copy on file. Exact fees, deadlines and office locations are set by the University each admissions cycle, so confirm current details with Academic Affairs or your department before your visit.
+    </div>
+  `));
+}
+
+function renderStepsInto(containerId, steps, calloutHtml){
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = "";
+  steps.forEach((s, i)=>{
+    const step = el(`
+      <div class="reg-step">
+        <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="step-content">
+          <h4>${s.title}</h4>
+          <p>${s.body}</p>
+          <div class="doc-list"></div>
+        </div>
+      </div>
+    `);
+    const docWrap = step.querySelector('.doc-list');
+    s.items.forEach(it => docWrap.appendChild(el(`<span class="doc-chip">${it}</span>`)));
+    wrap.appendChild(step);
+  });
+  if(calloutHtml) wrap.appendChild(el(calloutHtml));
+}
+
+function renderCourseReg(){
+  renderStepsInto('courseRegSteps', COURSE_REG_STEPS, `
+    <div class="callout">
+      <strong>Tip:</strong> Screenshot or save your registration slip right after submitting — it's the fastest way to resolve any "not registered for this course" issue that comes up later in the semester.
+    </div>
+  `);
+}
+
+function renderHallReg(){
+  renderStepsInto('hallRegSteps', HALL_REG_STEPS, `
+    <div class="callout">
+      <strong>Before you go:</strong> Bed space in traditional halls is limited each year. If you're not allocated one, don't wait — approved hostels near campus fill up quickly once the semester date is announced.
+    </div>
+  `);
+  const dir = document.getElementById('hallDirectory');
+  dir.innerHTML = "";
+  HALLS.forEach(h=>{
+    dir.appendChild(el(`
+      <div class="nav-card hall-card" style="cursor:default;">
+        <span class="hall-type ${h.tag}">${h.type}</span>
+        <div class="icon">🏠</div>
+        <h3>${h.name}</h3>
+        <p>${h.note}</p>
+        <div class="hall-meta">
+          <span>👥 ${h.gender}</span>
+          <span>📍 ${h.loc}</span>
+        </div>
+      </div>
+    `));
+  });
+}
+
+function renderNews(){
+  const list = document.getElementById('newsList');
+  list.innerHTML = "";
+  NEWS.forEach(n=>{
+    list.appendChild(el(`
+      <div class="news-item">
+        <div class="news-date"><div class="d">${n.d}</div><div class="m">${n.m}</div></div>
+        <div>
+          <h4>${n.title}</h4>
+          <p>${n.body}</p>
+          <span class="news-tag ${n.tagClass}">${n.tag}</span>
+        </div>
+      </div>
+    `));
+  });
+}
+
+function renderAll(){
+  renderDashboard();
+  renderTimetable();
+  renderExams();
+  renderPastQ(document.getElementById('pqSearch').value);
+  renderRegister();
+  renderCourseReg();
+  renderHallReg();
+  renderNews();
+  // toggle registration nav visibility badge relevance
+  document.getElementById('regTabBtn').style.opacity = currentLevel==="100" ? "1" : "0.55";
+}
+
+document.getElementById('regSubTabs').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const sub = btn.dataset.sub;
+  document.querySelectorAll('#regSubTabs button').forEach(b=>b.classList.toggle('active', b===btn));
+  document.querySelectorAll('.reg-sub-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('regsub-'+sub).classList.add('active');
+});
+
+// ===================== NAV / EVENTS =====================
+document.getElementById('levelSwitch').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  currentLevel = btn.dataset.level;
+  document.querySelectorAll('#levelSwitch button').forEach(b=>b.classList.toggle('active', b===btn));
+  renderAll();
+});
+
+document.getElementById('navtabs').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  goTo(btn.dataset.page);
+});
+
+document.querySelectorAll('.nav-card').forEach(card=>{
+  card.addEventListener('click', ()=> goTo(card.dataset.goto));
+});
+
+function goTo(page){
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('#navtabs button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('pqSearch').addEventListener('input', (e)=>{
+  renderPastQ(e.target.value);
+});
+
+document.getElementById('hamburger').addEventListener('click', ()=>{
+  document.getElementById('levelSwitch').classList.toggle('open');
+});
+
+// Site data loads only after a correct password is entered (see tryEnter above)
+</script>
+</body>
+</html>

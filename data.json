@@ -1,0 +1,588 @@
+{
+  "settings": {
+    "gatePassword": "PKA_Jarani246006",
+    "adminPassword": "PKA_Jarani246006",
+    "siteName": "PKacademics informs",
+    "tagline": "To the whole wiase of Legon"
+  },
+  "levels": {
+    "100": {
+      "courses": [
+        {
+          "code": "UGRC 110",
+          "name": "Academic Writing I",
+          "day": "Mon",
+          "time": "8:00–10:00",
+          "type": "Lecture",
+          "venue": "JQB / Lecture Hall 1"
+        },
+        {
+          "code": "UGRC 150",
+          "name": "Critical Thinking & Practical Reasoning",
+          "day": "Mon",
+          "time": "14:00–16:00",
+          "type": "Lecture",
+          "venue": "N400"
+        },
+        {
+          "code": "MATH 121",
+          "name": "Algebra & Trigonometry",
+          "day": "Tue",
+          "time": "8:00–10:00",
+          "type": "Lecture",
+          "venue": "Chemistry Lecture Theatre"
+        },
+        {
+          "code": "MATH 121",
+          "name": "Algebra & Trigonometry — Tutorial",
+          "day": "Thu",
+          "time": "10:00–11:00",
+          "type": "Tutorial",
+          "venue": "Math Dept Room 3"
+        },
+        {
+          "code": "CSCD 101",
+          "name": "Computer Science Practice I",
+          "day": "Wed",
+          "time": "9:00–11:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room A"
+        },
+        {
+          "code": "CSCD 101",
+          "name": "Practice I — Lab",
+          "day": "Wed",
+          "time": "13:00–15:00",
+          "type": "Lab",
+          "venue": "Computer Lab 2"
+        },
+        {
+          "code": "UGRC 130",
+          "name": "Understanding Human Societies",
+          "day": "Fri",
+          "time": "11:00–13:00",
+          "type": "Lecture",
+          "venue": "N201"
+        }
+      ],
+      "exams": [
+        {
+          "code": "UGRC 110",
+          "name": "Academic Writing I",
+          "date": "2026-12-08",
+          "month": "DEC",
+          "day": "08",
+          "time": "9:00 AM",
+          "venue": "Great Hall"
+        },
+        {
+          "code": "MATH 121",
+          "name": "Algebra & Trigonometry",
+          "date": "2026-12-10",
+          "month": "DEC",
+          "day": "10",
+          "time": "2:00 PM",
+          "venue": "Sports Stadium"
+        },
+        {
+          "code": "CSCD 101",
+          "name": "Computer Science Practice I",
+          "date": "2026-12-12",
+          "month": "DEC",
+          "day": "12",
+          "time": "9:00 AM",
+          "venue": "JQB Complex"
+        },
+        {
+          "code": "UGRC 150",
+          "name": "Critical Thinking",
+          "date": "2026-12-15",
+          "month": "DEC",
+          "day": "15",
+          "time": "9:00 AM",
+          "venue": "N-Block"
+        },
+        {
+          "code": "UGRC 130",
+          "name": "Understanding Human Societies",
+          "date": "2026-12-17",
+          "month": "DEC",
+          "day": "17",
+          "time": "2:00 PM",
+          "venue": "Great Hall"
+        }
+      ],
+      "pastQ": [
+        {
+          "code": "UGRC 110",
+          "name": "Academic Writing I",
+          "years": [
+            "2025",
+            "2024",
+            "2023",
+            "2022"
+          ]
+        },
+        {
+          "code": "MATH 121",
+          "name": "Algebra & Trigonometry",
+          "years": [
+            "2025",
+            "2024",
+            "2023"
+          ]
+        },
+        {
+          "code": "CSCD 101",
+          "name": "Computer Science Practice I",
+          "years": [
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "code": "UGRC 150",
+          "name": "Critical Thinking & Practical Reasoning",
+          "years": [
+            "2025",
+            "2023"
+          ]
+        },
+        {
+          "code": "UGRC 130",
+          "name": "Understanding Human Societies",
+          "years": [
+            "2024",
+            "2023",
+            "2022"
+          ]
+        }
+      ]
+    },
+    "200": {
+      "courses": [
+        {
+          "code": "CSCD 201",
+          "name": "Data Structures",
+          "day": "Mon",
+          "time": "8:00–10:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room A"
+        },
+        {
+          "code": "CSCD 201",
+          "name": "Data Structures — Lab",
+          "day": "Mon",
+          "time": "14:00–16:00",
+          "type": "Lab",
+          "venue": "Computer Lab 1"
+        },
+        {
+          "code": "MATH 222",
+          "name": "Linear Algebra",
+          "day": "Tue",
+          "time": "10:00–12:00",
+          "type": "Lecture",
+          "venue": "Math Dept LT"
+        },
+        {
+          "code": "STAT 221",
+          "name": "Probability & Statistics I",
+          "day": "Wed",
+          "time": "8:00–10:00",
+          "type": "Lecture",
+          "venue": "N301"
+        },
+        {
+          "code": "CSCD 205",
+          "name": "Discrete Structures",
+          "day": "Thu",
+          "time": "11:00–13:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room B"
+        }
+      ],
+      "exams": [
+        {
+          "code": "CSCD 201",
+          "name": "Data Structures",
+          "date": "2026-12-09",
+          "month": "DEC",
+          "day": "09",
+          "time": "9:00 AM",
+          "venue": "JQB Complex"
+        },
+        {
+          "code": "MATH 222",
+          "name": "Linear Algebra",
+          "date": "2026-12-11",
+          "month": "DEC",
+          "day": "11",
+          "time": "2:00 PM",
+          "venue": "Sports Stadium"
+        },
+        {
+          "code": "STAT 221",
+          "name": "Probability & Statistics I",
+          "date": "2026-12-16",
+          "month": "DEC",
+          "day": "16",
+          "time": "9:00 AM",
+          "venue": "N-Block"
+        }
+      ],
+      "pastQ": [
+        {
+          "code": "CSCD 201",
+          "name": "Data Structures",
+          "years": [
+            "2025",
+            "2024",
+            "2023"
+          ]
+        },
+        {
+          "code": "MATH 222",
+          "name": "Linear Algebra",
+          "years": [
+            "2025",
+            "2024"
+          ]
+        },
+        {
+          "code": "STAT 221",
+          "name": "Probability & Statistics I",
+          "years": [
+            "2025",
+            "2023",
+            "2022"
+          ]
+        }
+      ]
+    },
+    "300": {
+      "courses": [
+        {
+          "code": "CSCD 307",
+          "name": "Algorithms & Complexity",
+          "day": "Mon",
+          "time": "9:00–11:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room A"
+        },
+        {
+          "code": "CSCD 311",
+          "name": "Database Systems",
+          "day": "Tue",
+          "time": "13:00–15:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room B"
+        },
+        {
+          "code": "CSCD 315",
+          "name": "Operating Systems",
+          "day": "Wed",
+          "time": "10:00–12:00",
+          "type": "Lecture",
+          "venue": "N400"
+        }
+      ],
+      "exams": [
+        {
+          "code": "CSCD 307",
+          "name": "Algorithms & Complexity",
+          "date": "2026-12-08",
+          "month": "DEC",
+          "day": "08",
+          "time": "2:00 PM",
+          "venue": "JQB Complex"
+        },
+        {
+          "code": "CSCD 311",
+          "name": "Database Systems",
+          "date": "2026-12-12",
+          "month": "DEC",
+          "day": "12",
+          "time": "9:00 AM",
+          "venue": "N-Block"
+        }
+      ],
+      "pastQ": [
+        {
+          "code": "CSCD 307",
+          "name": "Algorithms & Complexity",
+          "years": [
+            "2025",
+            "2024",
+            "2023"
+          ]
+        },
+        {
+          "code": "CSCD 311",
+          "name": "Database Systems",
+          "years": [
+            "2025",
+            "2024"
+          ]
+        }
+      ]
+    },
+    "400": {
+      "courses": [
+        {
+          "code": "CSCD 401",
+          "name": "Final Year Project I",
+          "day": "Mon",
+          "time": "9:00–11:00",
+          "type": "Lecture",
+          "venue": "CS Seminar Room"
+        },
+        {
+          "code": "CSCD 415",
+          "name": "Artificial Intelligence",
+          "day": "Tue",
+          "time": "10:00–12:00",
+          "type": "Lecture",
+          "venue": "CS Lecture Room A"
+        }
+      ],
+      "exams": [
+        {
+          "code": "CSCD 415",
+          "name": "Artificial Intelligence",
+          "date": "2026-12-09",
+          "month": "DEC",
+          "day": "09",
+          "time": "9:00 AM",
+          "venue": "JQB Complex"
+        }
+      ],
+      "pastQ": [
+        {
+          "code": "CSCD 415",
+          "name": "Artificial Intelligence",
+          "years": [
+            "2025",
+            "2024"
+          ]
+        }
+      ]
+    }
+  },
+  "news": [
+    {
+      "d": "18",
+      "m": "AUG",
+      "title": "First Semester Registration Opens August 24",
+      "body": "Continuing students can begin online course registration on the Student Portal. Freshers should see the Registration Guide tab for the manual process.",
+      "tag": "Urgent"
+    },
+    {
+      "d": "12",
+      "m": "AUG",
+      "title": "Orientation Week Schedule Released",
+      "body": "Level 100 orientation runs August 25–29, including hall placement, ID card capture, and faculty welcome sessions.",
+      "tag": "General"
+    },
+    {
+      "d": "05",
+      "m": "AUG",
+      "title": "UGRC 110 Adds Extra Tutorial Group",
+      "body": "Due to high enrolment, a new Academic Writing I tutorial group has been added on Thursdays, 2–3pm, N-Block.",
+      "tag": "Academic"
+    }
+  ],
+  "halls": [
+    {
+      "name": "Commonwealth Hall",
+      "type": "Traditional Hall",
+      "note": "One of the oldest traditional halls, known for its strong hall culture and traditions.",
+      "gender": "Male",
+      "loc": "Central Campus"
+    },
+    {
+      "name": "Legon Hall",
+      "type": "Traditional Hall",
+      "note": "The founding hall of the University, split into Annie Jiagge and Republic Halls.",
+      "gender": "Mixed (sections)",
+      "loc": "Central Campus"
+    },
+    {
+      "name": "Akuafo Hall",
+      "type": "Traditional Hall",
+      "note": "Traditional hall with a large student population and active hall associations.",
+      "gender": "Mixed",
+      "loc": "Central Campus"
+    },
+    {
+      "name": "Volta Hall",
+      "type": "Traditional Hall",
+      "note": "One of the traditional halls historically associated with female students.",
+      "gender": "Female",
+      "loc": "Central Campus"
+    },
+    {
+      "name": "Mensah Sarbah Hall",
+      "type": "Traditional Hall",
+      "note": "Traditional hall with strong sporting and cultural activities.",
+      "gender": "Mixed",
+      "loc": "Central Campus"
+    },
+    {
+      "name": "International Students Hostel (ISH)",
+      "type": "University Hostel",
+      "note": "Managed accommodation with a mix of local and international students.",
+      "gender": "Mixed",
+      "loc": "Near Central Campus"
+    },
+    {
+      "name": "Affiliate & Private Hostels",
+      "type": "Private/Approved Hostel",
+      "note": "A range of university-approved private hostels around Legon — availability, price, and distance vary.",
+      "gender": "Varies",
+      "loc": "Around campus"
+    }
+  ],
+  "regSteps": [
+    {
+      "title": "Confirm your admission and pay acceptance fees",
+      "body": "Log in to the Admissions Portal with your applicant ID to download your admission letter, then pay the acceptance fee before the stated deadline.",
+      "items": [
+        "Admission letter",
+        "Acceptance fee receipt",
+        "Valid ID"
+      ]
+    },
+    {
+      "title": "Complete biometric and medical registration",
+      "body": "Report in person for biometric data capture and complete your medical examination at the University Hospital or approved centre.",
+      "items": [
+        "Passport photographs",
+        "Medical records",
+        "Admission letter"
+      ]
+    },
+    {
+      "title": "Register for accommodation (if applicable)",
+      "body": "If allocated a hall or hostel, report to your assigned hall office with your admission letter to complete room allocation.",
+      "items": [
+        "Hall placement notice",
+        "Hall dues receipt"
+      ]
+    },
+    {
+      "title": "Submit original documents for verification",
+      "body": "Take your original certificates to the Academic Affairs Directorate for physical verification against your application.",
+      "items": [
+        "Original WASSCE/SSSCE results",
+        "Birth certificate"
+      ]
+    },
+    {
+      "title": "Register your courses manually",
+      "body": "Visit your department/faculty office with your admission letter and receipts to be manually registered for first-semester courses.",
+      "items": [
+        "Admission letter",
+        "Fee receipt",
+        "Registration form"
+      ]
+    },
+    {
+      "title": "Collect your student ID card and matriculate",
+      "body": "Collect your official student ID card and attend the matriculation ceremony.",
+      "items": [
+        "Proof of registration",
+        "Matriculation gown"
+      ]
+    }
+  ],
+  "courseRegSteps": [
+    {
+      "title": "Check your registration window",
+      "body": "Registration opens in stages by level and student number range — check the academic calendar or your student email for your slot.",
+      "items": [
+        "Academic calendar",
+        "Timeslot notice"
+      ]
+    },
+    {
+      "title": "Clear any financial or academic holds",
+      "body": "Fees must be paid and there should be no outstanding academic holds before the portal allows registration.",
+      "items": [
+        "Fee receipt",
+        "No holds"
+      ]
+    },
+    {
+      "title": "Log in to the Student Information Management System",
+      "body": "Use your student ID and portal password to log in and select courses.",
+      "items": [
+        "Student ID",
+        "Portal password"
+      ]
+    },
+    {
+      "title": "Select courses for the semester",
+      "body": "Pick core courses first, then electives up to your credit limit. Check for timetable clashes before confirming.",
+      "items": [
+        "Programme structure sheet"
+      ]
+    },
+    {
+      "title": "Resolve timetable clashes",
+      "body": "Swap sections or electives if the system flags an overlap — you can't submit with unresolved clashes.",
+      "items": [
+        "Alternative section codes"
+      ]
+    },
+    {
+      "title": "Submit and print your registration slip",
+      "body": "Save or print your slip — you may need to show it at exams.",
+      "items": [
+        "Registration slip"
+      ]
+    }
+  ],
+  "hallRegSteps": [
+    {
+      "title": "Understand your accommodation options",
+      "body": "Traditional Halls are allocated centrally; Hostels are booked separately. See the directory below.",
+      "items": [
+        "Traditional Halls",
+        "Hostels"
+      ]
+    },
+    {
+      "title": "Apply for accommodation online",
+      "body": "Submit your hall preferences on the housing portal during the application window.",
+      "items": [
+        "Portal login",
+        "Preference ranking"
+      ]
+    },
+    {
+      "title": "Wait for the bed allocation results",
+      "body": "Allocations are published by student ID on the housing portal or notice boards.",
+      "items": [
+        "Allocation result"
+      ]
+    },
+    {
+      "title": "Pay hall/hostel dues and confirm your room",
+      "body": "Pay your hall dues within the deadline to secure your bed.",
+      "items": [
+        "Hall dues receipt",
+        "Allocation letter"
+      ]
+    },
+    {
+      "title": "Report to your hall for check-in",
+      "body": "Bring your allocation letter, receipt, and ID to check in and get your room key.",
+      "items": [
+        "Allocation letter",
+        "Receipt",
+        "Valid ID"
+      ]
+    }
+  ]
+}

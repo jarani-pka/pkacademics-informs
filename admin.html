@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — PKacademics informs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F2545; --navy-deep:#081729; --gold:#C79A3D; --gold-light:#E7C877;
+    --red:#8C2F39; --bg:#EEF0F4; --card:#FFFFFF; --ink:#16202B; --ink-soft:#4A5566; --line:#D6DAE2; --green:#2F6B4F;
+    --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.5;}
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--font-display);}
+
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--navy-deep);
+  }
+  .login-card{
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:16px;
+    padding:36px 32px; width:100%; max-width:360px; text-align:center;
+  }
+  .login-mark{width:54px; height:54px; border-radius:13px; margin:0 auto 14px; background:linear-gradient(155deg, var(--gold-light), var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; color:var(--navy-deep); font-size:19px;}
+  .login-card h2{color:#fff; font-size:20px; margin-bottom:4px;}
+  .login-card p{color:rgba(255,255,255,0.5); font-size:12.5px; margin-bottom:20px;}
+  .login-card input{width:100%; padding:12px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; margin-bottom:10px;}
+  .login-card input::placeholder{color:rgba(255,255,255,0.4);}
+  .login-card button{width:100%; padding:12px; border:none; border-radius:8px; background:var(--gold); color:var(--navy-deep); font-weight:700; font-size:14px; cursor:pointer;}
+  .login-err{color:#F2A6A6; font-size:12.5px; min-height:16px; margin-bottom:6px;}
+
+  #adminApp{display:none;}
+  .topbar{background:var(--navy); color:#fff; padding:0 24px; position:sticky; top:0; z-index:10;}
+  .topbar-inner{max-width:1100px; margin:0 auto; height:60px; display:flex; align-items:center; justify-content:space-between;}
+  .topbar h1{font-size:17px; font-weight:600;}
+  .topbar .sub{font-size:11px; color:var(--gold-light); text-transform:uppercase; letter-spacing:1.4px;}
+  .logout{background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:7px 14px; border-radius:7px; font-size:12.5px; cursor:pointer;}
+
+  .tabs{background:var(--navy-deep); overflow-x:auto;}
+  .tabs-inner{max-width:1100px; margin:0 auto; padding:0 24px; display:flex; gap:2px;}
+  .tabs button{background:none; border:none; color:rgba(255,255,255,0.55); padding:12px 15px; font-size:13px; font-weight:500; border-bottom:2.5px solid transparent; white-space:nowrap; cursor:pointer;}
+  .tabs button.active{color:#fff; border-bottom-color:var(--gold);}
+
+  main{max-width:1100px; margin:0 auto; padding:32px 24px 80px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;}
+  .panel-head h2{font-size:22px; color:var(--navy-deep);}
+  .level-tabs{display:flex; gap:6px; margin-bottom:18px;}
+  .level-tabs button{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; color:var(--ink-soft); cursor:pointer;}
+  .level-tabs button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+
+  .btn{background:var(--navy); color:#fff; border:none; padding:9px 16px; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer;}
+  .btn:hover{background:var(--navy-deep);}
+  .btn-gold{background:var(--gold); color:var(--navy-deep);}
+  .btn-red{background:transparent; border:1px solid var(--red); color:var(--red);}
+  .btn-red:hover{background:var(--red); color:#fff;}
+  .btn-sm{padding:5px 11px; font-size:12px;}
+
+  .item-card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:12px;}
+  .item-card .row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+  .item-card input, .item-card select, .item-card textarea{
+    flex:1; min-width:120px; padding:9px 10px; border:1px solid var(--line); border-radius:6px; font-size:13px; font-family:var(--font-body);
+  }
+  .item-card textarea{width:100%; min-height:60px; resize:vertical;}
+  .item-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:6px;}
+  .field-label{font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-soft); display:block; margin-bottom:3px;}
+  .field{flex:1; min-width:130px;}
+
+  .save-bar{
+    position:sticky; bottom:0; background:#fff; border-top:1px solid var(--line);
+    padding:14px 24px; display:flex; justify-content:flex-end; gap:10px; margin-top:20px;
+  }
+  .toast{
+    position:fixed; bottom:20px; right:20px; background:var(--green); color:#fff; padding:12px 18px;
+    border-radius:8px; font-size:13.5px; font-weight:500; opacity:0; transform:translateY(10px); transition:.25s; z-index:100;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+
+  .settings-grid{display:grid; gap:16px; max-width:480px;}
+  .settings-grid label{font-size:13px; font-weight:600; color:var(--navy-deep); margin-bottom:4px; display:block;}
+  .settings-grid input{width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px;}
+  .hint{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-mark">PK</div>
+    <h2>Admin Login</h2>
+    <p>PKacademics informs — content manager</p>
+    <input type="password" id="adminPwInput" placeholder="Admin password">
+    <div class="login-err" id="loginErr"></div>
+    <button onclick="doLogin()">Log in</button>
+  </div>
+</div>
+
+<div id="adminApp">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <h1>PKacademics informs</h1>
+        <div class="sub">Admin panel</div>
+      </div>
+      <button class="logout" onclick="doLogout()">Log out</button>
+    </div>
+    <div class="tabs">
+      <div class="tabs-inner" id="tabButtons">
+        <button data-panel="courses" class="active">Timetable</button>
+        <button data-panel="exams">Exams</button>
+        <button data-panel="pastq">Past Questions</button>
+        <button data-panel="news">News</button>
+        <button data-panel="halls">Halls & Hostels</button>
+        <button data-panel="settings">Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- COURSES / TIMETABLE -->
+    <section class="panel active" id="panel-courses">
+      <div class="panel-head"><h2>Timetable</h2><button class="btn btn-gold" onclick="addCourse()">+ Add class</button></div>
+      <div class="level-tabs" id="levelTabsCourses"></div>
+      <div id="courseList"></div>
+    </section>
+
+    <!-- EXAMS -->
+    <section class="panel" id="panel-exams">
+      <div class="panel-head"><h2>Exam Schedule</h2><button class="btn btn-gold" onclick="addExam()">+ Add exam</button></div>
+      <div class="level-tabs" id="levelTabsExams"></div>
+      <div id="examList"></div>
+    </section>
+
+    <!-- PAST QUESTIONS -->
+    <section class="panel" id="panel-pastq">
+      <div class="panel-head"><h2>Past Questions</h2><button class="btn btn-gold" onclick="addPQ()">+ Add course</button></div>
+      <div class="level-tabs" id="levelTabsPQ"></div>
+      <div id="pqList"></div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="panel" id="panel-news">
+      <div class="panel-head"><h2>School News</h2><button class="btn btn-gold" onclick="addNews()">+ Add announcement</button></div>
+      <div id="newsList"></div>
+    </section>
+
+    <!-- HALLS -->
+    <section class="panel" id="panel-halls">
+      <div class="panel-head"><h2>Halls & Hostels</h2><button class="btn btn-gold" onclick="addHall()">+ Add hall</button></div>
+      <div id="hallList"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="panel" id="panel-settings">
+      <div class="panel-head"><h2>Settings</h2></div>
+      <div class="settings-grid">
+        <div>
+          <label>Site name</label>
+          <input id="setSiteName">
+        </div>
+        <div>
+          <label>Tagline</label>
+          <input id="setTagline">
+        </div>
+        <div>
+          <label>Visitor gate password</label>
+          <input id="setGatePw">
+          <div class="hint">This is the password students type to enter the site.</div>
+        </div>
+        <div>
+          <label>Admin password</label>
+          <input id="setAdminPw">
+          <div class="hint">This is the password for this admin panel. Changing it logs you out.</div>
+        </div>
+        <button class="btn btn-gold" style="width:fit-content;" onclick="saveSettings()">Save settings</button>
+      </div>
+    </section>
+
+    <div class="save-bar" id="saveBar" style="display:none;">
+      <button class="btn" onclick="saveCurrentSection()">Save changes</button>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+let ADMIN_PW = "";
+let DATA = null;
+let currentLevel = "100";
+let currentPanel = "courses";
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+async function doLogin(){
+  const pw = document.getElementById('adminPwInput').value;
+  const res = await fetch('/api/admin/verify', { method:'POST', headers:{'x-admin-password': pw} });
+  if(res.ok){
+    ADMIN_PW = pw;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    await loadData();
+  } else {
+    document.getElementById('loginErr').textContent = "Wrong password.";
+  }
+}
+function doLogout(){
+  ADMIN_PW = "";
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPwInput').value = "";
+}
+
+async function loadData(){
+  const res = await fetch('/api/admin/data', { headers:{'x-admin-password': ADMIN_PW} });
+  DATA = await res.json();
+  document.getElementById('setSiteName').value = DATA.settings.siteName;
+  document.getElementById('setTagline').value = DATA.settings.tagline;
+  document.getElementById('setGatePw').value = DATA.settings.gatePassword;
+  document.getElementById('setAdminPw').value = DATA.settings.adminPassword;
+  renderLevelTabs();
+  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls();
+}
+
+async function saveSection(key, value){
+  const res = await fetch('/api/admin/section/' + key, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify({ value })
+  });
+  if(res.ok){ showToast('Saved ✓'); } else { showToast('Failed to save — check password.'); }
+}
+
+async function saveSettings(){
+  const body = {
+    siteName: document.getElementById('setSiteName').value,
+    tagline: document.getElementById('setTagline').value,
+    gatePassword: document.getElementById('setGatePw').value,
+    adminPassword: document.getElementById('setAdminPw').value,
+  };
+  const res = await fetch('/api/admin/settings', {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify(body)
+  });
+  if(res.ok){
+    showToast('Settings saved ✓');
+    if(body.adminPassword !== ADMIN_PW){ setTimeout(doLogout, 800); }
+  } else {
+    showToast('Failed to save.');
+  }
+}
+
+// ---------- tabs ----------
+document.getElementById('tabButtons').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  currentPanel = btn.dataset.panel;
+  document.querySelectorAll('#tabButtons button').forEach(b=>b.classList.toggle('active', b===btn));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+currentPanel).classList.add('active');
+  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls'].includes(currentPanel) ? 'flex' : 'none';
+});
+
+function renderLevelTabs(){
+  ['levelTabsCourses','levelTabsExams','levelTabsPQ'].forEach(id=>{
+    const wrap = document.getElementById(id);
+    wrap.innerHTML = "";
+    ["100","200","300","400"].forEach(lvl=>{
+      const b = document.createElement('button');
+      b.textContent = "Level " + lvl;
+      if(lvl===currentLevel) b.classList.add('active');
+      b.onclick = ()=>{ currentLevel = lvl; renderLevelTabs(); renderCourses(); renderExams(); renderPQ(); };
+      wrap.appendChild(b);
+    });
+  });
+}
+
+// ---------- COURSES ----------
+function renderCourses(){
+  const wrap = document.getElementById('courseList');
+  wrap.innerHTML = "";
+  const list = DATA.levels[currentLevel].courses;
+  list.forEach((c, i)=>{
+    wrap.appendChild(courseCard(c, i));
+  });
+}
+function courseCard(c, i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Code</span><input value="${c.code}" data-f="code"></div>
+      <div class="field"><span class="field-label">Name</span><input value="${c.name}" data-f="name"></div>
+    </div>
+    <div class="row">
+      <div class="field"><span class="field-label">Day</span>
+        <select data-f="day">${["Mon","Tue","Wed","Thu","Fri"].map(d=>`<option ${d===c.day?'selected':''}>${d}</option>`).join('')}</select>
+      </div>
+      <div class="field"><span class="field-label">Time</span><input value="${c.time}" data-f="time"></div>
+      <div class="field"><span class="field-label">Type</span>
+        <select data-f="type">${["Lecture","Tutorial","Lab"].map(t=>`<option ${t===c.type?'selected':''}>${t}</option>`).join('')}</select>
+      </div>
+      <div class="field"><span class="field-label">Venue</span><input value="${c.venue}" data-f="venue"></div>
+    </div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeCourse(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ c[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addCourse(){
+  DATA.levels[currentLevel].courses.push({code:"", name:"", day:"Mon", time:"", type:"Lecture", venue:""});
+  renderCourses();
+}
+function removeCourse(i){ DATA.levels[currentLevel].courses.splice(i,1); renderCourses(); }
+
+// ---------- EXAMS ----------
+function renderExams(){
+  const wrap = document.getElementById('examList');
+  wrap.innerHTML = "";
+  DATA.levels[currentLevel].exams.forEach((ex,i)=> wrap.appendChild(examCard(ex,i)));
+}
+function examCard(ex,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Code</span><input value="${ex.code}" data-f="code"></div>
+      <div class="field"><span class="field-label">Name</span><input value="${ex.name}" data-f="name"></div>
+    </div>
+    <div class="row">
+      <div class="field"><span class="field-label">Date (YYYY-MM-DD)</span><input value="${ex.date}" data-f="date"></div>
+      <div class="field"><span class="field-label">Day #</span><input value="${ex.day}" data-f="day" style="max-width:70px;"></div>
+      <div class="field"><span class="field-label">Month</span><input value="${ex.month}" data-f="month" style="max-width:80px;"></div>
+      <div class="field"><span class="field-label">Time</span><input value="${ex.time}" data-f="time"></div>
+      <div class="field"><span class="field-label">Venue</span><input value="${ex.venue}" data-f="venue"></div>
+    </div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeExam(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ ex[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addExam(){
+  DATA.levels[currentLevel].exams.push({code:"", name:"", date:"2026-12-01", day:"01", month:"DEC", time:"", venue:""});
+  renderExams();
+}
+function removeExam(i){ DATA.levels[currentLevel].exams.splice(i,1); renderExams(); }
+
+// ---------- PAST QUESTIONS ----------
+function renderPQ(){
+  const wrap = document.getElementById('pqList');
+  wrap.innerHTML = "";
+  DATA.levels[currentLevel].pastQ.forEach((p,i)=> wrap.appendChild(pqCard(p,i)));
+}
+function pqCard(p,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Code</span><input value="${p.code}" data-f="code"></div>
+      <div class="field"><span class="field-label">Name</span><input value="${p.name}" data-f="name"></div>
+      <div class="field"><span class="field-label">Years (comma separated)</span><input value="${p.years.join(', ')}" data-f="years"></div>
+    </div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removePQ(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      if(inp.dataset.f==='years'){ p.years = inp.value.split(',').map(s=>s.trim()).filter(Boolean); }
+      else { p[inp.dataset.f] = inp.value; }
+    });
+  });
+  return div;
+}
+function addPQ(){
+  DATA.levels[currentLevel].pastQ.push({code:"", name:"", years:[]});
+  renderPQ();
+}
+function removePQ(i){ DATA.levels[currentLevel].pastQ.splice(i,1); renderPQ(); }
+
+// ---------- NEWS ----------
+function renderNews(){
+  const wrap = document.getElementById('newsList');
+  wrap.innerHTML = "";
+  DATA.news.forEach((n,i)=> wrap.appendChild(newsCard(n,i)));
+}
+function newsCard(n,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field" style="max-width:80px;"><span class="field-label">Day</span><input value="${n.d}" data-f="d"></div>
+      <div class="field" style="max-width:100px;"><span class="field-label">Month</span><input value="${n.m}" data-f="m"></div>
+      <div class="field"><span class="field-label">Tag</span>
+        <select data-f="tag">${["General","Academic","Urgent"].map(t=>`<option ${t===n.tag?'selected':''}>${t}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Title</span><input value="${n.title}" data-f="title"></div></div>
+    <div class="row"><div class="field"><span class="field-label">Body</span><textarea data-f="body">${n.body}</textarea></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeNews(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ n[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addNews(){
+  DATA.news.unshift({d:"01", m:"JAN", title:"", body:"", tag:"General"});
+  renderNews();
+}
+function removeNews(i){ DATA.news.splice(i,1); renderNews(); }
+
+// ---------- HALLS ----------
+function renderHalls(){
+  const wrap = document.getElementById('hallList');
+  wrap.innerHTML = "";
+  DATA.halls.forEach((h,i)=> wrap.appendChild(hallCard(h,i)));
+}
+function hallCard(h,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Name</span><input value="${h.name}" data-f="name"></div>
+      <div class="field"><span class="field-label">Type</span>
+        <select data-f="type">${["Traditional Hall","University Hostel","Private/Approved Hostel"].map(t=>`<option ${t===h.type?'selected':''}>${t}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><span class="field-label">Gender</span><input value="${h.gender}" data-f="gender"></div>
+      <div class="field"><span class="field-label">Location</span><input value="${h.loc}" data-f="loc"></div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Note</span><textarea data-f="note">${h.note}</textarea></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeHall(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ h[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addHall(){
+  DATA.halls.push({name:"", type:"Traditional Hall", note:"", gender:"", loc:""});
+  renderHalls();
+}
+function removeHall(i){ DATA.halls.splice(i,1); renderHalls(); }
+
+// ---------- SAVE CURRENT SECTION ----------
+function saveCurrentSection(){
+  if(currentPanel==='courses' || currentPanel==='exams' || currentPanel==='pastq'){
+    saveSection('levels', DATA.levels);
+  } else if(currentPanel==='news'){
+    saveSection('news', DATA.news);
+  } else if(currentPanel==='halls'){
+    saveSection('halls', DATA.halls);
+  }
+}
+</script>
+</body>
+</html>
