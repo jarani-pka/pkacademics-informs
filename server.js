@@ -7,7 +7,7 @@ const app = express();
 const DATA_FILE = path.join(__dirname, "data.json");
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "25mb" }));
 
 // ---------- helpers ----------
 function readData() {
@@ -67,6 +67,17 @@ app.put("/api/admin/settings", requireAdmin, (req, res) => {
   const data = readData();
   data.settings = { ...data.settings, ...req.body };
   writeData(data);
+  res.json({ ok: true });
+});
+
+// Full backup export (includes everything, for the admin to download)
+app.get("/api/admin/backup", requireAdmin, (req, res) => {
+  res.json(readData());
+});
+
+// Full restore (overwrites everything with an uploaded backup)
+app.put("/api/admin/restore", requireAdmin, (req, res) => {
+  writeData(req.body);
   res.json({ ok: true });
 });
 

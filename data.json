@@ -5,6 +5,20 @@
     "siteName": "PKacademics informs",
     "tagline": "To the whole wiase of Legon"
   },
+  "appearance": {
+    "heroImage": null,
+    "cornerLogo": null,
+    "clickSounds": false
+  },
+  "updates": [
+    {
+      "d": "24",
+      "m": "AUG",
+      "title": "Welcome to PKacademics informs",
+      "body": "The site is now live for students. Explore your timetable, exams, past questions, and registration guides.",
+      "tag": "New"
+    }
+  ],
   "levels": {
     "100": {
       "courses": [

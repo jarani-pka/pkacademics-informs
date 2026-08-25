@@ -116,6 +116,8 @@
         <button data-panel="pastq">Past Questions</button>
         <button data-panel="news">News</button>
         <button data-panel="halls">Halls & Hostels</button>
+        <button data-panel="updates">What's New</button>
+        <button data-panel="appearance">Appearance</button>
         <button data-panel="settings">Settings</button>
       </div>
     </div>
@@ -155,6 +157,38 @@
       <div id="hallList"></div>
     </section>
 
+    <!-- WHAT'S NEW -->
+    <section class="panel" id="panel-updates">
+      <div class="panel-head"><h2>What's New</h2><button class="btn btn-gold" onclick="addUpdate()">+ Add update</button></div>
+      <div id="updatesList"></div>
+    </section>
+
+    <!-- APPEARANCE -->
+    <section class="panel" id="panel-appearance">
+      <div class="panel-head"><h2>Appearance</h2></div>
+      <div class="settings-grid">
+        <div>
+          <label>Background photo (hero image)</label>
+          <input type="file" id="setHeroImage" accept="image/*">
+          <div class="hint">Shown behind the "Everything for your semester" banner. Leave empty to keep the current one.</div>
+          <div id="heroPreview" style="margin-top:8px;"></div>
+        </div>
+        <div>
+          <label>Logo (top right corner)</label>
+          <input type="file" id="setCornerLogo" accept="image/*">
+          <div class="hint">E.g. the University of Ghana crest. Leave empty for none.</div>
+          <div id="logoPreview" style="margin-top:8px;"></div>
+        </div>
+        <div>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="setClickSounds" style="width:auto;"> Enable click sounds
+          </label>
+          <div class="hint">A soft click plays when students tap buttons around the site.</div>
+        </div>
+        <button class="btn btn-gold" style="width:fit-content;" onclick="saveAppearance()">Save appearance</button>
+      </div>
+    </section>
+
     <!-- SETTINGS -->
     <section class="panel" id="panel-settings">
       <div class="panel-head"><h2>Settings</h2></div>
@@ -178,6 +212,18 @@
           <div class="hint">This is the password for this admin panel. Changing it logs you out.</div>
         </div>
         <button class="btn btn-gold" style="width:fit-content;" onclick="saveSettings()">Save settings</button>
+      </div>
+
+      <div style="margin-top:36px; padding-top:24px; border-top:1px solid var(--line); max-width:480px;">
+        <h3 style="font-size:16px; margin-bottom:6px;">Backup &amp; Restore</h3>
+        <p class="hint" style="margin-bottom:14px;">Download a backup before any big change (like a site redesign) so nothing gets lost. If content ever resets after an update, restore it here.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" onclick="exportBackup()">Download backup</button>
+          <label class="btn" style="display:inline-block; cursor:pointer;">
+            Restore from backup
+            <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restoreBackup(this.files[0])">
+          </label>
+        </div>
       </div>
     </section>
 
@@ -228,8 +274,86 @@ async function loadData(){
   document.getElementById('setTagline').value = DATA.settings.tagline;
   document.getElementById('setGatePw').value = DATA.settings.gatePassword;
   document.getElementById('setAdminPw').value = DATA.settings.adminPassword;
+  document.getElementById('setClickSounds').checked = !!(DATA.appearance && DATA.appearance.clickSounds);
+  renderAppearancePreviews();
   renderLevelTabs();
-  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls();
+  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates();
+}
+
+function renderAppearancePreviews(){
+  const heroP = document.getElementById('heroPreview');
+  const logoP = document.getElementById('logoPreview');
+  heroP.innerHTML = (DATA.appearance && DATA.appearance.heroImage)
+    ? `<img src="${DATA.appearance.heroImage}" style="max-width:220px; border-radius:8px; display:block;">`
+    : `<span class="hint">No custom background set — using the default photo.</span>`;
+  logoP.innerHTML = (DATA.appearance && DATA.appearance.cornerLogo)
+    ? `<img src="${DATA.appearance.cornerLogo}" style="max-height:50px; display:block;">`
+    : `<span class="hint">No logo set.</span>`;
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveAppearance(){
+  const heroFile = document.getElementById('setHeroImage').files[0];
+  const logoFile = document.getElementById('setCornerLogo').files[0];
+  const appearance = { ...(DATA.appearance || {}) };
+  if(heroFile) appearance.heroImage = await fileToDataUrl(heroFile);
+  if(logoFile) appearance.cornerLogo = await fileToDataUrl(logoFile);
+  appearance.clickSounds = document.getElementById('setClickSounds').checked;
+  const res = await fetch('/api/admin/section/appearance', {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify({ value: appearance })
+  });
+  if(res.ok){
+    DATA.appearance = appearance;
+    renderAppearancePreviews();
+    showToast('Appearance saved ✓');
+  } else {
+    showToast('Failed to save.');
+  }
+}
+
+// ---------- BACKUP / RESTORE ----------
+async function exportBackup(){
+  const res = await fetch('/api/admin/backup', { headers:{'x-admin-password': ADMIN_PW} });
+  const backup = await res.json();
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pkacademics-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded ✓');
+}
+
+async function restoreBackup(file){
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const res = await fetch('/api/admin/restore', {
+      method:'PUT',
+      headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+      body: JSON.stringify(parsed)
+    });
+    if(res.ok){
+      showToast('Restored ✓ Reloading…');
+      setTimeout(()=> location.reload(), 1000);
+    } else {
+      showToast('Restore failed — check the file.');
+    }
+  }catch(e){
+    showToast('That file could not be read.');
+  }
 }
 
 async function saveSection(key, value){
@@ -268,7 +392,7 @@ document.getElementById('tabButtons').addEventListener('click', (e)=>{
   document.querySelectorAll('#tabButtons button').forEach(b=>b.classList.toggle('active', b===btn));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+currentPanel).classList.add('active');
-  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls'].includes(currentPanel) ? 'flex' : 'none';
+  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls','updates'].includes(currentPanel) ? 'flex' : 'none';
 });
 
 function renderLevelTabs(){
@@ -403,8 +527,16 @@ function newsCard(n,i){
     <div class="row">
       <div class="field" style="max-width:80px;"><span class="field-label">Day</span><input value="${n.d}" data-f="d"></div>
       <div class="field" style="max-width:100px;"><span class="field-label">Month</span><input value="${n.m}" data-f="m"></div>
-      <div class="field"><span class="field-label">Tag</span>
-        <select data-f="tag">${["General","Academic","Urgent"].map(t=>`<option ${t===n.tag?'selected':''}>${t}</option>`).join('')}</select>
+      <div class="field"><span class="field-label">Category</span>
+        <input list="newsCategoryOptions" data-f="tag" value="${n.tag}">
+        <datalist id="newsCategoryOptions">
+          <option value="Academic">
+          <option value="Entertainment">
+          <option value="General">
+          <option value="Urgent">
+          <option value="Sports">
+          <option value="Career">
+        </datalist>
       </div>
     </div>
     <div class="row"><div class="field"><span class="field-label">Title</span><input value="${n.title}" data-f="title"></div></div>
@@ -456,6 +588,37 @@ function addHall(){
 }
 function removeHall(i){ DATA.halls.splice(i,1); renderHalls(); }
 
+// ---------- WHAT'S NEW ----------
+function renderUpdates(){
+  const wrap = document.getElementById('updatesList');
+  wrap.innerHTML = "";
+  (DATA.updates || []).forEach((u,i)=> wrap.appendChild(updateCard(u,i)));
+}
+function updateCard(u,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field" style="max-width:80px;"><span class="field-label">Day</span><input value="${u.d}" data-f="d"></div>
+      <div class="field" style="max-width:100px;"><span class="field-label">Month</span><input value="${u.m}" data-f="m"></div>
+      <div class="field"><span class="field-label">Label</span><input value="${u.tag || 'New'}" data-f="tag" placeholder="New, Improved, Fixed…"></div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Title</span><input value="${u.title}" data-f="title"></div></div>
+    <div class="row"><div class="field"><span class="field-label">Description</span><textarea data-f="body">${u.body}</textarea></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeUpdate(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ u[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addUpdate(){
+  if(!DATA.updates) DATA.updates = [];
+  DATA.updates.unshift({d:"01", m:"JAN", title:"", body:"", tag:"New"});
+  renderUpdates();
+}
+function removeUpdate(i){ DATA.updates.splice(i,1); renderUpdates(); }
+
 // ---------- SAVE CURRENT SECTION ----------
 function saveCurrentSection(){
   if(currentPanel==='courses' || currentPanel==='exams' || currentPanel==='pastq'){
@@ -464,6 +627,8 @@ function saveCurrentSection(){
     saveSection('news', DATA.news);
   } else if(currentPanel==='halls'){
     saveSection('halls', DATA.halls);
+  } else if(currentPanel==='updates'){
+    saveSection('updates', DATA.updates);
   }
 }
 </script>

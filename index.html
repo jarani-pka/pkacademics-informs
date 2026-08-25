@@ -73,6 +73,16 @@
   .level-switch button:hover:not(.active){color:#fff; background:rgba(255,255,255,0.1);}
 
   .hamburger{display:none; background:none; border:none; color:#fff; font-size:22px;}
+  .corner-logo{display:flex; align-items:center; margin-right:4px;}
+  .corner-logo img{height:36px; width:auto; border-radius:4px;}
+  .update-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:14px; position:relative;}
+  .update-card .update-tag{
+    display:inline-block; font-family:var(--font-mono); font-size:10px; letter-spacing:.5px; text-transform:uppercase;
+    background:var(--gold); color:var(--navy-deep); padding:2px 9px; border-radius:20px; font-weight:700; margin-bottom:8px;
+  }
+  .update-card h4{font-family:var(--font-display); font-size:18px; color:var(--navy-deep); margin-bottom:6px;}
+  .update-card p{font-size:13.5px; color:var(--ink-soft);}
+  .update-card .update-date{position:absolute; top:20px; right:20px; font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);}
   .logout-btn{
     background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
     color:#fff; font-size:12.5px; font-weight:600; letter-spacing:.3px;
@@ -311,6 +321,10 @@
   .tag-academic{background:#E3EEE7; color:var(--green);}
   .tag-general{background:#E8ECF3; color:var(--navy);}
   .tag-urgent{background:#FBEEE9; color:var(--red);}
+  .tag-entertainment{background:#F3E8F5; color:#7A3B8A;}
+  .tag-sports{background:#E8F1FB; color:#1D5D9B;}
+  .tag-career{background:#FDF3E3; color:#8A5A16;}
+  .news-tag:not(.tag-academic):not(.tag-general):not(.tag-urgent):not(.tag-entertainment):not(.tag-sports):not(.tag-career){background:var(--bg); color:var(--ink-soft);}
 
   .empty-state{
     text-align:center; padding:50px 20px; color:var(--ink-soft);
@@ -464,6 +478,7 @@
         <span class="sub">To the whole wiase of Legon</span>
       </div>
     </div>
+    <div class="corner-logo" id="cornerLogoSlot" style="display:none;"></div>
     <div class="level-switch" id="levelSwitch">
       <button data-level="100" class="active">Level 100</button>
       <button data-level="200">Level 200</button>
@@ -481,6 +496,7 @@
       <button data-page="pastq">Past Questions</button>
       <button data-page="register" id="regTabBtn">Registration Guide <span class="badge">L100</span></button>
       <button data-page="news">News</button>
+      <button data-page="updates">What's New</button>
     </div>
   </div>
 </div>
@@ -612,7 +628,18 @@
       <h1 class="page-title">Latest School News</h1>
       <p class="page-desc">Course updates, deadlines and campus announcements, most recent first.</p>
     </div>
+    <div class="day-tabs" id="newsCategoryTabs" style="margin-bottom:20px;"></div>
     <div class="news-list" id="newsList"></div>
+  </section>
+
+  <!-- WHAT'S NEW -->
+  <section class="page" id="page-updates">
+    <div class="page-head">
+      <span class="eyebrow">Feature Updates</span>
+      <h1 class="page-title">What's New</h1>
+      <p class="page-desc">New features and improvements added to PKacademics informs.</p>
+    </div>
+    <div id="updatesList"></div>
   </section>
 
 </main>
@@ -744,6 +771,8 @@ let HALLS = [];
 let REG_STEPS = [];
 let COURSE_REG_STEPS = [];
 let HALL_REG_STEPS = [];
+let UPDATES = [];
+let APPEARANCE = {};
 
 async function loadSiteData(){
   const res = await fetch('/api/data');
@@ -754,12 +783,49 @@ async function loadSiteData(){
   REG_STEPS = json.regSteps;
   COURSE_REG_STEPS = json.courseRegSteps;
   HALL_REG_STEPS = json.hallRegSteps;
+  UPDATES = json.updates || [];
+  APPEARANCE = json.appearance || {};
   document.getElementById('gateBrandName').textContent = json.siteName;
   document.getElementById('gateBrandSub').textContent = json.tagline;
   document.querySelector('.brand-text .name').innerHTML = json.siteName.replace('informs','<span style="color:var(--gold-light);">informs</span>');
   document.querySelector('.brand-text .sub').textContent = json.tagline;
+
+  if(APPEARANCE.heroImage){
+    document.documentElement.style.setProperty('--hero-photo', `url("${APPEARANCE.heroImage}")`);
+  }
+  const logoSlot = document.getElementById('cornerLogoSlot');
+  if(APPEARANCE.cornerLogo){
+    logoSlot.innerHTML = `<img src="${APPEARANCE.cornerLogo}" alt="Logo">`;
+    logoSlot.style.display = 'flex';
+  } else {
+    logoSlot.style.display = 'none';
+  }
+  clickSoundsEnabled = !!APPEARANCE.clickSounds;
+
   renderAll();
 }
+
+// ---------- tiny synthesized click sound (no audio file needed) ----------
+let clickSoundsEnabled = false;
+let audioCtx = null;
+function playClickSound(){
+  if(!clickSoundsEnabled) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 720;
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.09);
+  }catch(e){}
+}
+document.addEventListener('click', (e)=>{
+  if(e.target.closest('button, .nav-card, a')) playClickSound();
+});
 
 
 // ===================== RENDER HELPERS =====================
@@ -963,18 +1029,58 @@ function renderHallReg(){
   });
 }
 
+let currentNewsCategory = "All";
+
+function renderNewsCategoryTabs(){
+  const wrap = document.getElementById('newsCategoryTabs');
+  wrap.innerHTML = "";
+  const categories = ["All", ...new Set(NEWS.map(n => n.tag || "General"))];
+  categories.forEach(cat=>{
+    const b = document.createElement('button');
+    b.textContent = cat;
+    if(cat === currentNewsCategory) b.classList.add('active');
+    b.addEventListener('click', ()=>{ currentNewsCategory = cat; renderNewsCategoryTabs(); renderNews(); });
+    wrap.appendChild(b);
+  });
+}
+
 function renderNews(){
   const list = document.getElementById('newsList');
   list.innerHTML = "";
-  NEWS.forEach(n=>{
+  const filtered = currentNewsCategory === "All" ? NEWS : NEWS.filter(n => (n.tag || "General") === currentNewsCategory);
+  if(!filtered.length){
+    list.appendChild(el(`<div class="empty-state">No news in this category yet.</div>`));
+    return;
+  }
+  filtered.forEach(n=>{
+    const tagClass = 'tag-' + (n.tag || 'General').toLowerCase().replace(/\s+/g,'-');
     list.appendChild(el(`
       <div class="news-item">
         <div class="news-date"><div class="d">${n.d}</div><div class="m">${n.m}</div></div>
         <div>
           <h4>${n.title}</h4>
           <p>${n.body}</p>
-          <span class="news-tag ${n.tagClass}">${n.tag}</span>
+          <span class="news-tag ${tagClass}">${n.tag}</span>
         </div>
+      </div>
+    `));
+  });
+}
+
+function renderUpdates(){
+  const list = document.getElementById('updatesList');
+  list.innerHTML = "";
+  if(!UPDATES.length){
+    list.appendChild(el(`<div class="empty-state">No updates yet — check back soon.</div>`));
+    return;
+  }
+  UPDATES.forEach(u=>{
+    list.appendChild(el(`
+      <div class="update-card">
+        <div class="update-date">${u.d} ${u.m}</div>
+        <span class="update-tag">${u.tag || 'New'}</span>
+        <h4>${u.title}</h4>
+        <p>${u.body}</p>
       </div>
     `));
   });
@@ -988,7 +1094,9 @@ function renderAll(){
   renderRegister();
   renderCourseReg();
   renderHallReg();
+  renderNewsCategoryTabs();
   renderNews();
+  renderUpdates();
   // toggle registration nav visibility badge relevance
   document.getElementById('regTabBtn').style.opacity = currentLevel==="100" ? "1" : "0.55";
 }
