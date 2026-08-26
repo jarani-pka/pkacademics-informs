@@ -2,8 +2,9 @@
   "settings": {
     "gatePassword": "PKA_Jarani246006",
     "adminPassword": "PKA_Jarani246006",
-    "siteName": "PKacademics informs",
-    "tagline": "To the whole wiase of Legon"
+    "siteName": "PKAcademics Informs",
+    "tagline": "To the whole wiase of Legon",
+    "poweredBy": ""
   },
   "appearance": {
     "heroImage": null,
@@ -16,7 +17,9 @@
       "m": "AUG",
       "title": "Welcome to PKacademics informs",
       "body": "The site is now live for students. Explore your timetable, exams, past questions, and registration guides.",
-      "tag": "New"
+      "tag": "New",
+      "image": null,
+      "link": null
     }
   ],
   "levels": {
@@ -389,21 +392,27 @@
       "m": "AUG",
       "title": "First Semester Registration Opens August 24",
       "body": "Continuing students can begin online course registration on the Student Portal. Freshers should see the Registration Guide tab for the manual process.",
-      "tag": "Urgent"
+      "tag": "Urgent",
+      "image": null,
+      "link": null
     },
     {
       "d": "12",
       "m": "AUG",
       "title": "Orientation Week Schedule Released",
       "body": "Level 100 orientation runs August 25–29, including hall placement, ID card capture, and faculty welcome sessions.",
-      "tag": "General"
+      "tag": "General",
+      "image": null,
+      "link": null
     },
     {
       "d": "05",
       "m": "AUG",
       "title": "UGRC 110 Adds Extra Tutorial Group",
       "body": "Due to high enrolment, a new Academic Writing I tutorial group has been added on Thursdays, 2–3pm, N-Block.",
-      "tag": "Academic"
+      "tag": "Academic",
+      "image": null,
+      "link": null
     }
   ],
   "halls": [
@@ -598,5 +607,83 @@
         "Valid ID"
       ]
     }
-  ]
+  ],
+  "aboutJarani": {
+    "bio": "PKAcademics was created by Paul Kwesi Addo, popularly known as Jarani — a University of Ghana student who knows firsthand how confusing university life can be when you're new, or even when you're not.",
+    "mission": "PKAcademics is an independent student-focused platform created to help students navigate university life — finding, understanding and organizing the information that matters, all in one place.",
+    "closing": "This is a growing project. If something is missing, unclear, or could be better, reach out — PKAcademics gets better with every student who uses it."
+  },
+  "quickLinks": [
+    {
+      "name": "Student Portal",
+      "description": "Register courses, view results, and manage your academic record.",
+      "audience": "All students",
+      "category": "Academic",
+      "url": "https://sts.ug.edu.gh"
+    },
+    {
+      "name": "Sakai (UG-Sakai)",
+      "description": "Access course materials, assignments, and announcements from lecturers.",
+      "audience": "All students",
+      "category": "Academic",
+      "url": "https://sakai.ug.edu.gh"
+    },
+    {
+      "name": "Balme Library",
+      "description": "Search the library catalogue and access digital resources.",
+      "audience": "All students",
+      "category": "Library",
+      "url": "https://balmelibrary.ug.edu.gh"
+    },
+    {
+      "name": "Academic Calendar",
+      "description": "Official semester dates, registration windows, and exam periods.",
+      "audience": "All students",
+      "category": "Academic",
+      "url": "https://www.ug.edu.gh"
+    }
+  ],
+  "studentAccounts": [],
+  "programmeCatalog": {
+    "100": {
+      "categories": {
+        "Basic & Applied Sciences": {
+          "Computer Science": [
+            {
+              "code": "CSCD 101",
+              "name": "Computer Science Practice I"
+            },
+            {
+              "code": "MATH 121",
+              "name": "Algebra & Trigonometry"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ]
+        },
+        "Humanities": {
+          "Archaeology + Political Science + Philosophy & Classics": [
+            {
+              "code": "ARCH 111",
+              "name": "Approaches to the Study of the Past"
+            },
+            {
+              "code": "POLI 111",
+              "name": "Introduction to Political Science"
+            },
+            {
+              "code": "PHCL 101",
+              "name": "Civilisations of the Ancient World"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

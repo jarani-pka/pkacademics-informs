@@ -116,7 +116,10 @@
         <button data-panel="pastq">Past Questions</button>
         <button data-panel="news">News</button>
         <button data-panel="halls">Halls & Hostels</button>
+        <button data-panel="quicklinks">UG Quick Links</button>
+        <button data-panel="students">Student Accounts</button>
         <button data-panel="updates">What's New</button>
+        <button data-panel="about">About Jarani</button>
         <button data-panel="appearance">Appearance</button>
         <button data-panel="settings">Settings</button>
       </div>
@@ -157,10 +160,51 @@
       <div id="hallList"></div>
     </section>
 
+    <!-- UG QUICK LINKS -->
+    <section class="panel" id="panel-quicklinks">
+      <div class="panel-head"><h2>UG Quick Links</h2><button class="btn btn-gold" onclick="addQuickLink()">+ Add link</button></div>
+      <div id="quickLinksList"></div>
+    </section>
+
+    <!-- STUDENT ACCOUNTS -->
+    <section class="panel" id="panel-students">
+      <div class="panel-head">
+        <h2>Student Accounts</h2>
+        <button class="btn" onclick="loadStudentAccounts()">Refresh</button>
+      </div>
+      <p class="hint" style="margin-bottom:16px;">Students request an account with a username and phone number. Approve a request and set their password yourself — that's what they'll use to log in and see their saved timetable.</p>
+
+      <h3 style="font-size:15px; margin-bottom:10px; color:var(--navy-deep);">Pending requests</h3>
+      <div id="pendingAccountsList" style="margin-bottom:32px;"></div>
+
+      <h3 style="font-size:15px; margin-bottom:10px; color:var(--navy-deep);">Approved accounts</h3>
+      <div id="approvedAccountsList"></div>
+    </section>
+
     <!-- WHAT'S NEW -->
     <section class="panel" id="panel-updates">
       <div class="panel-head"><h2>What's New</h2><button class="btn btn-gold" onclick="addUpdate()">+ Add update</button></div>
       <div id="updatesList"></div>
+    </section>
+
+    <!-- ABOUT JARANI -->
+    <section class="panel" id="panel-about">
+      <div class="panel-head"><h2>About Jarani</h2></div>
+      <div class="settings-grid" style="max-width:620px;">
+        <div>
+          <label>Bio</label>
+          <textarea id="setAboutBio" style="width:100%; min-height:90px; padding:10px; border:1px solid var(--line); border-radius:8px; font-family:var(--font-body); font-size:14px;"></textarea>
+        </div>
+        <div>
+          <label>Mission</label>
+          <textarea id="setAboutMission" style="width:100%; min-height:90px; padding:10px; border:1px solid var(--line); border-radius:8px; font-family:var(--font-body); font-size:14px;"></textarea>
+        </div>
+        <div>
+          <label>Closing note</label>
+          <textarea id="setAboutClosing" style="width:100%; min-height:70px; padding:10px; border:1px solid var(--line); border-radius:8px; font-family:var(--font-body); font-size:14px;"></textarea>
+        </div>
+        <button class="btn btn-gold" style="width:fit-content;" onclick="saveAbout()">Save About page</button>
+      </div>
     </section>
 
     <!-- APPEARANCE -->
@@ -196,6 +240,10 @@
         <div>
           <label>Site name</label>
           <input id="setSiteName">
+        </div>
+        <div>
+          <label>Powered by line</label>
+          <input id="setPoweredBy">
         </div>
         <div>
           <label>Tagline</label>
@@ -271,14 +319,178 @@ async function loadData(){
   const res = await fetch('/api/admin/data', { headers:{'x-admin-password': ADMIN_PW} });
   DATA = await res.json();
   document.getElementById('setSiteName').value = DATA.settings.siteName;
+  document.getElementById('setPoweredBy').value = DATA.settings.poweredBy || '';
   document.getElementById('setTagline').value = DATA.settings.tagline;
   document.getElementById('setGatePw').value = DATA.settings.gatePassword;
   document.getElementById('setAdminPw').value = DATA.settings.adminPassword;
   document.getElementById('setClickSounds').checked = !!(DATA.appearance && DATA.appearance.clickSounds);
+  const about = DATA.aboutJarani || {};
+  document.getElementById('setAboutBio').value = about.bio || '';
+  document.getElementById('setAboutMission').value = about.mission || '';
+  document.getElementById('setAboutClosing').value = about.closing || '';
   renderAppearancePreviews();
   renderLevelTabs();
-  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates();
+  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates(); renderQuickLinks();
+  loadStudentAccounts();
 }
+
+async function saveAbout(){
+  const about = {
+    bio: document.getElementById('setAboutBio').value,
+    mission: document.getElementById('setAboutMission').value,
+    closing: document.getElementById('setAboutClosing').value,
+  };
+  const res = await fetch('/api/admin/section/aboutJarani', {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify({ value: about })
+  });
+  if(res.ok){ DATA.aboutJarani = about; showToast('About page saved ✓'); } else { showToast('Failed to save.'); }
+}
+
+// ---------- UG QUICK LINKS ----------
+function renderQuickLinks(){
+  const wrap = document.getElementById('quickLinksList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  (DATA.quickLinks || []).forEach((l,i)=> wrap.appendChild(quickLinkCard(l,i)));
+}
+function quickLinkCard(l,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Name</span><input value="${l.name}" data-f="name"></div>
+      <div class="field"><span class="field-label">Category</span><input value="${l.category || ''}" data-f="category" placeholder="Academic, Library…"></div>
+    </div>
+    <div class="row">
+      <div class="field"><span class="field-label">Audience</span><input value="${l.audience || ''}" data-f="audience" placeholder="All students, Level 100…"></div>
+      <div class="field"><span class="field-label">Link (https://...)</span><input value="${l.url}" data-f="url"></div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Description</span><textarea data-f="description">${l.description}</textarea></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeQuickLink(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ l[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addQuickLink(){
+  if(!DATA.quickLinks) DATA.quickLinks = [];
+  DATA.quickLinks.push({name:"", description:"", audience:"All students", category:"Academic", url:"https://"});
+  renderQuickLinks();
+}
+function removeQuickLink(i){ DATA.quickLinks.splice(i,1); renderQuickLinks(); }
+
+// ---------- STUDENT ACCOUNTS ----------
+let STUDENT_ACCOUNTS = [];
+
+async function loadStudentAccounts(){
+  const res = await fetch('/api/admin/student-accounts', { headers:{'x-admin-password': ADMIN_PW} });
+  STUDENT_ACCOUNTS = await res.json();
+  renderStudentAccounts();
+}
+
+function renderStudentAccounts(){
+  const pendingWrap = document.getElementById('pendingAccountsList');
+  const approvedWrap = document.getElementById('approvedAccountsList');
+  pendingWrap.innerHTML = "";
+  approvedWrap.innerHTML = "";
+
+  const pending = STUDENT_ACCOUNTS.filter(a => a.status === 'pending');
+  const approved = STUDENT_ACCOUNTS.filter(a => a.status === 'approved');
+
+  if(!pending.length){
+    pendingWrap.appendChild(el(`<div class="empty-state">No pending requests right now.</div>`));
+  } else {
+    pending.forEach(a=>{
+      pendingWrap.appendChild(el(`
+        <div class="item-card">
+          <div class="row">
+            <div class="field"><span class="field-label">Username</span><div style="padding:9px 0; font-weight:600;">${a.username}</div></div>
+            <div class="field"><span class="field-label">Phone</span><div style="padding:9px 0;">${a.phone}</div></div>
+          </div>
+          <div class="row">
+            <div class="field"><span class="field-label">Set their password</span><input type="text" id="pw-${a.username}" placeholder="Type a password for them"></div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-red btn-sm" onclick="rejectAccount('${a.username}')">Reject</button>
+            <button class="btn btn-gold btn-sm" onclick="approveAccount('${a.username}')">Approve &amp; set password</button>
+          </div>
+        </div>
+      `));
+    });
+  }
+
+  if(!approved.length){
+    approvedWrap.appendChild(el(`<div class="empty-state">No approved student accounts yet.</div>`));
+  } else {
+    approved.forEach(a=>{
+      approvedWrap.appendChild(el(`
+        <div class="item-card">
+          <div class="row">
+            <div class="field"><span class="field-label">Username</span><div style="padding:9px 0; font-weight:600;">${a.username}</div></div>
+            <div class="field"><span class="field-label">Phone</span><div style="padding:9px 0;">${a.phone}</div></div>
+            <div class="field"><span class="field-label">Level / Programme</span><div style="padding:9px 0; font-size:12.5px; color:var(--ink-soft);">${a.level ? 'Level '+a.level : '—'} ${a.programme || ''}</div></div>
+          </div>
+          <div class="row">
+            <div class="field"><span class="field-label">Reset password</span><input type="text" id="reset-${a.username}" placeholder="New password"></div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-red btn-sm" onclick="deleteAccount('${a.username}')">Delete account</button>
+            <button class="btn btn-sm" onclick="resetPassword('${a.username}')">Reset password</button>
+          </div>
+        </div>
+      `));
+    });
+  }
+}
+
+async function approveAccount(username){
+  const pw = document.getElementById('pw-'+username).value.trim();
+  if(!pw){ showToast('Type a password first.'); return; }
+  const res = await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}/approve`, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify({ password: pw })
+  });
+  if(res.ok){ showToast('Approved ✓ Share the username and password with them.'); loadStudentAccounts(); }
+  else { showToast('Failed to approve.'); }
+}
+
+async function rejectAccount(username){
+  if(!confirm(`Reject and delete the request from "${username}"?`)) return;
+  await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}`, {
+    method:'DELETE',
+    headers:{'x-admin-password': ADMIN_PW}
+  });
+  showToast('Request rejected.');
+  loadStudentAccounts();
+}
+
+async function deleteAccount(username){
+  if(!confirm(`Delete "${username}"'s account? This removes their saved timetable too.`)) return;
+  await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}`, {
+    method:'DELETE',
+    headers:{'x-admin-password': ADMIN_PW}
+  });
+  showToast('Account deleted.');
+  loadStudentAccounts();
+}
+
+async function resetPassword(username){
+  const pw = document.getElementById('reset-'+username).value.trim();
+  if(!pw){ showToast('Type a new password first.'); return; }
+  const res = await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}/reset-password`, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify({ password: pw })
+  });
+  if(res.ok){ showToast('Password reset ✓'); loadStudentAccounts(); }
+  else { showToast('Failed to reset.'); }
+}
+
+
 
 function renderAppearancePreviews(){
   const heroP = document.getElementById('heroPreview');
@@ -368,6 +580,7 @@ async function saveSection(key, value){
 async function saveSettings(){
   const body = {
     siteName: document.getElementById('setSiteName').value,
+    poweredBy: document.getElementById('setPoweredBy').value,
     tagline: document.getElementById('setTagline').value,
     gatePassword: document.getElementById('setGatePw').value,
     adminPassword: document.getElementById('setAdminPw').value,
@@ -392,7 +605,7 @@ document.getElementById('tabButtons').addEventListener('click', (e)=>{
   document.querySelectorAll('#tabButtons button').forEach(b=>b.classList.toggle('active', b===btn));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+currentPanel).classList.add('active');
-  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls','updates'].includes(currentPanel) ? 'flex' : 'none';
+  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls','updates','quicklinks'].includes(currentPanel) ? 'flex' : 'none';
 });
 
 function renderLevelTabs(){
@@ -541,15 +754,29 @@ function newsCard(n,i){
     </div>
     <div class="row"><div class="field"><span class="field-label">Title</span><input value="${n.title}" data-f="title"></div></div>
     <div class="row"><div class="field"><span class="field-label">Body</span><textarea data-f="body">${n.body}</textarea></div></div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Photo (optional — camera or upload)</span>
+        <input type="file" accept="image/*" capture="environment" data-img="image">
+        ${n.image ? `<img src="${n.image}" style="max-width:140px; border-radius:6px; margin-top:6px; display:block;">` : ''}
+      </div>
+      <div class="field"><span class="field-label">Learn more link (optional)</span><input value="${n.link || ''}" data-f="link" placeholder="https://..."></div>
+    </div>
     <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeNews(${i})">Remove</button></div>
   `;
   div.querySelectorAll('[data-f]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ n[inp.dataset.f] = inp.value; });
   });
+  div.querySelectorAll('[data-img]').forEach(inp=>{
+    inp.addEventListener('change', async ()=>{
+      const file = inp.files[0];
+      if(file){ n[inp.dataset.img] = await fileToDataUrl(file); showToast('Photo attached — remember to Save changes'); }
+    });
+  });
   return div;
 }
 function addNews(){
-  DATA.news.unshift({d:"01", m:"JAN", title:"", body:"", tag:"General"});
+  DATA.news.unshift({d:"01", m:"JAN", title:"", body:"", tag:"General", image:null, link:null});
   renderNews();
 }
 function removeNews(i){ DATA.news.splice(i,1); renderNews(); }
@@ -605,16 +832,30 @@ function updateCard(u,i){
     </div>
     <div class="row"><div class="field"><span class="field-label">Title</span><input value="${u.title}" data-f="title"></div></div>
     <div class="row"><div class="field"><span class="field-label">Description</span><textarea data-f="body">${u.body}</textarea></div></div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Photo (optional)</span>
+        <input type="file" accept="image/*" capture="environment" data-img="image">
+        ${u.image ? `<img src="${u.image}" style="max-width:140px; border-radius:6px; margin-top:6px; display:block;">` : ''}
+      </div>
+      <div class="field"><span class="field-label">Learn more link (optional)</span><input value="${u.link || ''}" data-f="link" placeholder="https://..."></div>
+    </div>
     <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeUpdate(${i})">Remove</button></div>
   `;
   div.querySelectorAll('[data-f]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ u[inp.dataset.f] = inp.value; });
   });
+  div.querySelectorAll('[data-img]').forEach(inp=>{
+    inp.addEventListener('change', async ()=>{
+      const file = inp.files[0];
+      if(file){ u[inp.dataset.img] = await fileToDataUrl(file); showToast('Photo attached — remember to Save changes'); }
+    });
+  });
   return div;
 }
 function addUpdate(){
   if(!DATA.updates) DATA.updates = [];
-  DATA.updates.unshift({d:"01", m:"JAN", title:"", body:"", tag:"New"});
+  DATA.updates.unshift({d:"01", m:"JAN", title:"", body:"", tag:"New", image:null, link:null});
   renderUpdates();
 }
 function removeUpdate(i){ DATA.updates.splice(i,1); renderUpdates(); }
@@ -629,6 +870,8 @@ function saveCurrentSection(){
     saveSection('halls', DATA.halls);
   } else if(currentPanel==='updates'){
     saveSection('updates', DATA.updates);
+  } else if(currentPanel==='quicklinks'){
+    saveSection('quickLinks', DATA.quickLinks);
   }
 }
 </script>

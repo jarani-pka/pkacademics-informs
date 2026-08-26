@@ -83,6 +83,76 @@
   .update-card h4{font-family:var(--font-display); font-size:18px; color:var(--navy-deep); margin-bottom:6px;}
   .update-card p{font-size:13.5px; color:var(--ink-soft);}
   .update-card .update-date{position:absolute; top:20px; right:20px; font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);}
+
+  /* ===== My Timetable ===== */
+  .mt-panel{max-width:560px;}
+  .mt-panel.wide{max-width:none;}
+  .mt-auth-toggle{display:flex; gap:6px; margin-bottom:22px;}
+  .mt-auth-toggle button{
+    flex:1; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px; font-size:13.5px; font-weight:600; color:var(--ink-soft);
+  }
+  .mt-auth-toggle button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .mt-form{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:24px;}
+  .mt-form input{width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:8px; font-size:14px; margin-bottom:12px; font-family:var(--font-body);}
+  .mt-form label{font-size:12.5px; font-weight:600; color:var(--navy-deep); display:block; margin-bottom:5px;}
+  .mt-form .field-gap{margin-bottom:14px;}
+  .mt-error{color:var(--red); font-size:13px; margin-bottom:10px; min-height:16px;}
+  .mt-hint{font-size:12.5px; color:var(--ink-soft); margin-top:10px;}
+
+  .mt-level-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:14px; margin-bottom:8px;}
+  .mt-level-btn{
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:28px 16px; text-align:center;
+    font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--navy-deep); cursor:pointer; transition:.15s;
+  }
+  .mt-level-btn:hover{border-color:var(--gold); transform:translateY(-2px);}
+
+  .mt-programme-group{margin-bottom:22px;}
+  .mt-programme-group h4{font-family:var(--font-mono); font-size:11.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;}
+  .mt-programme-btn{
+    display:block; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px; margin-bottom:8px; font-size:14px; font-weight:600; color:var(--navy-deep); cursor:pointer;
+  }
+  .mt-programme-btn:hover{border-color:var(--gold);}
+
+  .mt-course-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:8px;
+  }
+  .mt-course-row .code{font-family:var(--font-mono); font-weight:600; color:var(--navy); font-size:12.5px;}
+  .mt-course-row .name{font-size:13.5px; color:var(--ink-soft);}
+  .mt-add-btn{
+    flex-shrink:0; background:var(--gold); color:var(--navy-deep); border:none; border-radius:20px;
+    padding:7px 16px; font-size:12.5px; font-weight:700;
+  }
+  .mt-add-btn.added{background:var(--green); color:#fff;}
+
+  .mt-mycourses{
+    position:sticky; bottom:16px; background:var(--navy); color:#fff; border-radius:12px; padding:16px 20px;
+    margin-top:20px; box-shadow:0 10px 30px rgba(15,37,69,0.3);
+  }
+  .mt-mycourses .count{font-family:var(--font-mono); font-size:12px; color:var(--gold-light); margin-bottom:8px;}
+  .mt-mycourses .chips{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;}
+  .mt-mycourses .chip{background:rgba(255,255,255,0.12); border-radius:20px; padding:3px 10px; font-size:11.5px; font-family:var(--font-mono);}
+  .mt-continue-btn{width:100%; background:var(--gold); color:var(--navy-deep); border:none; border-radius:8px; padding:12px; font-weight:700; font-size:14px;}
+
+  .mt-profile-bar{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:20px;
+  }
+  .mt-profile-bar .info{font-size:13px; color:var(--ink-soft);}
+  .mt-profile-bar .info strong{color:var(--navy-deep);}
+
+  .mt-session-card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:10px; cursor:pointer; position:relative;
+  }
+  .mt-session-card:hover{border-color:var(--gold);}
+  .mt-session-card .code{font-family:var(--font-mono); font-weight:600; color:var(--navy); font-size:12.5px;}
+  .mt-session-card .title{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep); margin:2px 0 8px;}
+  .mt-session-card .meta{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft);}
+
+  .mt-conflict-banner{
+    background:#FBEEE9; border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#6b2129; margin-bottom:16px;
+  }
   .logout-btn{
     background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
     color:#fff; font-size:12.5px; font-weight:600; letter-spacing:.3px;
@@ -451,7 +521,7 @@
 <div id="gate">
   <div class="gate-card">
     <div class="gate-mark">PK</div>
-    <h2 id="gateBrandName">PKacademics informs</h2>
+    <h2 id="gateBrandName">PKAcademics Informs</h2>
     <div class="gate-sub" id="gateBrandSub">To the whole wiase of Legon</div>
 
     <input type="password" id="gatePassword" placeholder="Enter password" autocomplete="off">
@@ -474,7 +544,7 @@
     <div class="brand">
       <div class="brand-mark">PK</div>
       <div class="brand-text">
-        <span class="name">PK<span style="color:var(--gold-light);">academics</span> informs</span>
+        <span class="name">PKAcademics Informs</span>
         <span class="sub">To the whole wiase of Legon</span>
       </div>
     </div>
@@ -492,11 +562,14 @@
     <div class="navtabs-inner" id="navtabs">
       <button data-page="dashboard" class="active">Dashboard</button>
       <button data-page="timetable">Timetable</button>
+      <button data-page="mytimetable">My Timetable</button>
       <button data-page="exams">Exams</button>
       <button data-page="pastq">Past Questions</button>
       <button data-page="register" id="regTabBtn">Registration Guide <span class="badge">L100</span></button>
+      <button data-page="quicklinks">UG Quick Links</button>
       <button data-page="news">News</button>
       <button data-page="updates">What's New</button>
+      <button data-page="about">About Jarani</button>
     </div>
   </div>
 </div>
@@ -507,9 +580,9 @@
   <section class="page active" id="page-dashboard">
     <div class="hero">
       <div class="hero-inner">
-        <span class="eyebrow">PKacademics informs</span>
-        <h1>Everything for your semester, in one place.</h1>
-        <p>Lecture times, exam dates, past questions, and school news — organised by level, so you always know what's next. To the whole wiase of Legon.</p>
+        <span class="eyebrow">PKAcademics Informs</span>
+        <h1 id="heroTagline">Making Legon easier, one student at a time.</h1>
+        <p>Your student-focused guide to navigating academics, registration, university resources, student life and opportunities — all organised in one place.</p>
         <div class="hero-stats">
           <div class="hero-stat"><div class="num" id="statCourses">7</div><div class="label">Courses this level</div></div>
           <div class="hero-stat"><div class="num" id="statExams">6</div><div class="label">Upcoming exams</div></div>
@@ -518,11 +591,18 @@
       </div>
     </div>
 
+    <p class="section-label">Academics &amp; Registration</p>
     <div class="grid-cards">
       <div class="nav-card" data-goto="timetable">
         <div class="icon">🗓️</div>
         <h3>Timetable</h3>
         <p>See your lecture, tutorial and lab schedule for the week, by day.</p>
+      </div>
+      <div class="nav-card" data-goto="mytimetable">
+        <span class="badge-new">Personal</span>
+        <div class="icon">🎯</div>
+        <h3>My Timetable</h3>
+        <p>Build and save your own personal timetable — it's there whenever you log back in.</p>
       </div>
       <div class="nav-card" data-goto="exams">
         <div class="icon">📝</div>
@@ -537,13 +617,32 @@
       <div class="nav-card" data-goto="register" id="regCard">
         <span class="badge-new">Level 100</span>
         <div class="icon">🧾</div>
-        <h3>Registration Guide</h3>
-        <p>Step-by-step walkthrough of manual registration as a fresher.</p>
+        <h3>Registration Centre</h3>
+        <p>Manual registration, course registration, and hall/bed allocation — step by step.</p>
+      </div>
+    </div>
+
+    <p class="section-label">Resources &amp; Community</p>
+    <div class="grid-cards">
+      <div class="nav-card" data-goto="quicklinks">
+        <div class="icon">🔗</div>
+        <h3>UG Quick Links</h3>
+        <p>Official University of Ghana platforms — Portal, Sakai, Library, and more — in one place.</p>
       </div>
       <div class="nav-card" data-goto="news">
         <div class="icon">📢</div>
-        <h3>School News</h3>
+        <h3>PKAcademics Informs</h3>
         <p>The latest announcements about courses, deadlines and campus life.</p>
+      </div>
+      <div class="nav-card" data-goto="updates">
+        <div class="icon">✨</div>
+        <h3>What's New</h3>
+        <p>New features and improvements added to PKAcademics.</p>
+      </div>
+      <div class="nav-card" data-goto="about">
+        <div class="icon">👋</div>
+        <h3>About Jarani</h3>
+        <p>The story behind PKAcademics, and why it exists.</p>
       </div>
     </div>
 
@@ -637,9 +736,118 @@
     <div class="page-head">
       <span class="eyebrow">Feature Updates</span>
       <h1 class="page-title">What's New</h1>
-      <p class="page-desc">New features and improvements added to PKacademics informs.</p>
+      <p class="page-desc">New features and improvements added to PKAcademics.</p>
     </div>
     <div id="updatesList"></div>
+  </section>
+
+  <!-- UG QUICK LINKS -->
+  <section class="page" id="page-quicklinks">
+    <div class="page-head">
+      <span class="eyebrow">Official Resources</span>
+      <h1 class="page-title">UG Quick Links</h1>
+      <p class="page-desc">Fast access to official University of Ghana platforms — no more searching around for the right link.</p>
+    </div>
+    <div class="grid-cards" id="quickLinksGrid"></div>
+  </section>
+
+  <!-- MY TIMETABLE -->
+  <section class="page" id="page-mytimetable">
+    <div class="page-head">
+      <span class="eyebrow">Personal & Private</span>
+      <h1 class="page-title">My Timetable</h1>
+      <p class="page-desc">Build your own timetable and save it to your account — it's there whenever you log back in.</p>
+    </div>
+
+    <!-- AUTH PANEL -->
+    <div id="mtAuthPanel" class="mt-panel">
+      <div class="mt-auth-toggle">
+        <button id="mtTabLogin" class="active" onclick="mtSwitchAuthTab('login')">Log In</button>
+        <button id="mtTabCreate" onclick="mtSwitchAuthTab('create')">Create Account</button>
+      </div>
+
+      <div id="mtLoginForm" class="mt-form">
+        <div class="field-gap"><label>Username</label><input type="text" id="mtLoginUsername"></div>
+        <div class="field-gap"><label>Password</label><input type="password" id="mtLoginPassword"></div>
+        <div class="mt-error" id="mtLoginError"></div>
+        <button class="mt-continue-btn" onclick="mtLogin()">Log In</button>
+        <p class="mt-hint">Don't have an account yet? Switch to "Create Account" above.</p>
+      </div>
+
+      <div id="mtCreateForm" class="mt-form" style="display:none;">
+        <div class="field-gap"><label>Choose a username</label><input type="text" id="mtCreateUsername" placeholder="e.g. kwame_100"></div>
+        <div class="field-gap"><label>Your phone number</label><input type="tel" id="mtCreatePhone" placeholder="e.g. 0244000000"></div>
+        <div class="mt-error" id="mtCreateError"></div>
+        <button class="mt-continue-btn" onclick="mtRequestAccount()">Request Account</button>
+        <p class="mt-hint">Your request goes to the site admin for approval. Once approved, you'll be given a password to log in — save your phone number correctly so they can verify it's really you.</p>
+      </div>
+    </div>
+
+    <!-- SELECT PANEL (level -> programme -> courses) -->
+    <div id="mtSelectPanel" class="mt-panel wide" style="display:none;">
+      <div id="mtSelectLevelView">
+        <h3 style="font-family:var(--font-display); font-size:18px; margin-bottom:14px; color:var(--navy-deep);">Select your level</h3>
+        <div class="mt-level-grid" id="mtLevelGrid"></div>
+      </div>
+
+      <div id="mtSelectProgrammeView" style="display:none;">
+        <h3 style="font-family:var(--font-display); font-size:18px; margin-bottom:14px; color:var(--navy-deep);">Select your programme</h3>
+        <div id="mtProgrammeGroups"></div>
+      </div>
+
+      <div id="mtSelectCoursesView" style="display:none;">
+        <h3 style="font-family:var(--font-display); font-size:18px; margin-bottom:14px; color:var(--navy-deep);">Select your courses</h3>
+        <div id="mtCourseRows"></div>
+        <div class="mt-mycourses" id="mtMyCourses" style="display:none;">
+          <div class="count" id="mtCourseCount">0 courses selected</div>
+          <div class="chips" id="mtCourseChips"></div>
+          <button class="mt-continue-btn" onclick="mtContinueToBuilder()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILDER PANEL -->
+    <div id="mtBuilderPanel" style="display:none;">
+      <div class="mt-profile-bar">
+        <div class="info"><strong id="mtProfileLevel"></strong> · <span id="mtProfileProgramme"></span></div>
+        <button class="btn-red-outline" style="background:none; border:1px solid var(--line); border-radius:7px; padding:7px 14px; font-size:12.5px; cursor:pointer; color:var(--ink-soft);" onclick="mtEditSelections()">Edit courses</button>
+      </div>
+
+      <div class="day-tabs" id="mtDayTabs"></div>
+
+      <div id="mtConflictBanner"></div>
+
+      <div id="mtSessionsList" style="margin-bottom:16px;"></div>
+
+      <button class="btn-gold-full" id="mtAddSessionBtn" onclick="mtOpenSessionForm()" style="width:100%; background:var(--gold); color:var(--navy-deep); border:none; border-radius:8px; padding:13px; font-weight:700; font-size:14px; margin-bottom:20px;">+ Add Session</button>
+
+      <div id="mtSessionForm" class="mt-form" style="display:none; margin-bottom:20px;"></div>
+
+      <button class="mt-continue-btn" onclick="mtSaveTimetable()">Save My Timetable</button>
+      <p class="mt-hint" style="text-align:center;">Logged in as <strong id="mtLoggedInAs"></strong> · <a href="#" onclick="mtLogout(); return false;" style="color:var(--red);">Log out</a></p>
+    </div>
+  </section>
+
+
+  <section class="page" id="page-about">
+    <div class="page-head">
+      <span class="eyebrow">Meet the Person Behind PKAcademics</span>
+      <h1 class="page-title">About Jarani</h1>
+    </div>
+    <div class="index-card" style="max-width:640px;">
+      <div class="code">PAUL KWESI ADDO</div>
+      <div class="title" style="padding-right:0;">Jarani</div>
+      <p id="aboutBio" style="font-size:14.5px; color:var(--ink-soft); line-height:1.7; margin-bottom:16px;"></p>
+      <p id="aboutMission" style="font-size:14.5px; color:var(--ink-soft); line-height:1.7; margin-bottom:16px;"></p>
+      <p id="aboutClosing" style="font-size:14.5px; color:var(--ink-soft); line-height:1.7;"></p>
+      <div class="meta-row" style="margin-top:18px;">
+        <span>📞 <a href="tel:0208487547" style="color:var(--navy); font-weight:600;">0208 487 547</a></span>
+        <span>💬 <a href="https://wa.me/233208487547" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">WhatsApp</a></span>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--ink-soft); margin-top:16px; max-width:640px;">
+      PKAcademics is an independent student-focused platform and is not an official University of Ghana representative or service.
+    </p>
   </section>
 
 </main>
@@ -773,6 +981,8 @@ let COURSE_REG_STEPS = [];
 let HALL_REG_STEPS = [];
 let UPDATES = [];
 let APPEARANCE = {};
+let ABOUT = {};
+let QUICK_LINKS = [];
 
 async function loadSiteData(){
   const res = await fetch('/api/data');
@@ -785,10 +995,14 @@ async function loadSiteData(){
   HALL_REG_STEPS = json.hallRegSteps;
   UPDATES = json.updates || [];
   APPEARANCE = json.appearance || {};
+  ABOUT = json.aboutJarani || {};
+  QUICK_LINKS = json.quickLinks || [];
+  PROGRAMME_CATALOG = json.programmeCatalog || {};
   document.getElementById('gateBrandName').textContent = json.siteName;
-  document.getElementById('gateBrandSub').textContent = json.tagline;
-  document.querySelector('.brand-text .name').innerHTML = json.siteName.replace('informs','<span style="color:var(--gold-light);">informs</span>');
-  document.querySelector('.brand-text .sub').textContent = json.tagline;
+  document.getElementById('gateBrandSub').textContent = json.poweredBy || json.tagline;
+  document.querySelector('.brand-text .name').textContent = json.siteName;
+  document.querySelector('.brand-text .sub').textContent = json.poweredBy || json.tagline;
+  document.getElementById('heroTagline').textContent = json.tagline;
 
   if(APPEARANCE.heroImage){
     document.documentElement.style.setProperty('--hero-photo', `url("${APPEARANCE.heroImage}")`);
@@ -1054,13 +1268,17 @@ function renderNews(){
   }
   filtered.forEach(n=>{
     const tagClass = 'tag-' + (n.tag || 'General').toLowerCase().replace(/\s+/g,'-');
+    const img = n.image ? `<img src="${n.image}" style="width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-bottom:10px;">` : '';
+    const link = n.link ? `<a href="${n.link}" target="_blank" rel="noopener" style="display:inline-block; margin-top:6px; font-size:12.5px; font-weight:600; color:var(--navy);">Learn more →</a>` : '';
     list.appendChild(el(`
       <div class="news-item">
         <div class="news-date"><div class="d">${n.d}</div><div class="m">${n.m}</div></div>
         <div>
+          ${img}
           <h4>${n.title}</h4>
           <p>${n.body}</p>
           <span class="news-tag ${tagClass}">${n.tag}</span>
+          ${link}
         </div>
       </div>
     `));
@@ -1075,15 +1293,401 @@ function renderUpdates(){
     return;
   }
   UPDATES.forEach(u=>{
+    const img = u.image ? `<img src="${u.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px; margin-bottom:12px;">` : '';
+    const link = u.link ? `<a href="${u.link}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; font-size:12.5px; font-weight:600; color:var(--navy);">Learn more →</a>` : '';
     list.appendChild(el(`
       <div class="update-card">
         <div class="update-date">${u.d} ${u.m}</div>
         <span class="update-tag">${u.tag || 'New'}</span>
+        ${img}
         <h4>${u.title}</h4>
         <p>${u.body}</p>
+        ${link}
       </div>
     `));
   });
+}
+
+function renderQuickLinks(){
+  const grid = document.getElementById('quickLinksGrid');
+  if(!grid) return;
+  grid.innerHTML = "";
+  if(!QUICK_LINKS.length){
+    grid.appendChild(el(`<div class="empty-state">No links added yet.</div>`));
+    return;
+  }
+  QUICK_LINKS.forEach(l=>{
+    const card = el(`
+      <a class="nav-card" href="${l.url}" target="_blank" rel="noopener" style="text-decoration:none; display:block;">
+        <span class="badge-new" style="background:var(--navy); color:#fff;">${l.category || 'Official'}</span>
+        <div class="icon">🔗</div>
+        <h3>${l.name}</h3>
+        <p>${l.description}</p>
+        <div class="meta-row" style="margin-top:10px; border-top:none; padding-top:0;"><span>👥 ${l.audience || 'All students'}</span></div>
+      </a>
+    `);
+    grid.appendChild(card);
+  });
+}
+
+function renderAbout(){
+  if(!ABOUT) return;
+  document.getElementById('aboutBio').textContent = ABOUT.bio || '';
+  document.getElementById('aboutMission').textContent = ABOUT.mission || '';
+  document.getElementById('aboutClosing').textContent = ABOUT.closing || '';
+}
+
+// ===================== MY TIMETABLE =====================
+let PROGRAMME_CATALOG = {};
+let studentUsername = null;
+let studentPassword = null;
+let studentAccount = null;
+
+let mtSelectedLevel = null;
+let mtSelectedProgramme = null;
+let mtSelectedCourses = [];   // [{code, name}]
+let mtSessions = [];          // working copy of timetableSessions
+let mtEditingIndex = null;
+let mtCurrentDay = "Mon";
+
+function mtSwitchAuthTab(tab){
+  document.getElementById('mtTabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('mtTabCreate').classList.toggle('active', tab==='create');
+  document.getElementById('mtLoginForm').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('mtCreateForm').style.display = tab==='create' ? 'block' : 'none';
+}
+
+async function mtLogin(){
+  const username = document.getElementById('mtLoginUsername').value.trim();
+  const password = document.getElementById('mtLoginPassword').value;
+  const errEl = document.getElementById('mtLoginError');
+  errEl.textContent = "";
+  if(!username || !password){ errEl.textContent = "Enter both your username and password."; return; }
+  try{
+    const res = await fetch('/api/student/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const data = await res.json();
+    if(!res.ok){ errEl.textContent = data.error || "Login failed."; return; }
+    studentUsername = username;
+    studentPassword = password;
+    studentAccount = data.account;
+    mtEnterAccount();
+  }catch(e){ errEl.textContent = "Couldn't reach the server — try again."; }
+}
+
+async function mtRequestAccount(){
+  const username = document.getElementById('mtCreateUsername').value.trim();
+  const phone = document.getElementById('mtCreatePhone').value.trim();
+  const errEl = document.getElementById('mtCreateError');
+  errEl.textContent = "";
+  if(!username || !phone){ errEl.textContent = "Enter a username and your phone number."; return; }
+  try{
+    const res = await fetch('/api/student/request', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username, phone})
+    });
+    const data = await res.json();
+    if(!res.ok){ errEl.textContent = data.error || "Request failed."; return; }
+    errEl.style.color = 'var(--green)';
+    errEl.textContent = "Request sent! You'll be given a password once approved — check with the admin.";
+    document.getElementById('mtCreateUsername').value = "";
+    document.getElementById('mtCreatePhone').value = "";
+  }catch(e){ errEl.textContent = "Couldn't reach the server — try again."; }
+}
+
+function mtEnterAccount(){
+  document.getElementById('mtAuthPanel').style.display = 'none';
+  if(studentAccount.level && studentAccount.selectedCourses && studentAccount.selectedCourses.length){
+    mtSelectedLevel = studentAccount.level;
+    mtSelectedProgramme = studentAccount.programme;
+    // rebuild course objects from catalog where possible, else keep codes only
+    mtSelectedCourses = (studentAccount.selectedCourses || []).map(code=>{
+      const found = mtFindCourseByCode(code);
+      return found || {code, name: code};
+    });
+    mtSessions = JSON.parse(JSON.stringify(studentAccount.timetableSessions || []));
+    mtShowBuilder();
+  } else {
+    mtShowSelectPanel();
+    mtRenderLevelGrid();
+  }
+}
+
+function mtFindCourseByCode(code){
+  for(const level in PROGRAMME_CATALOG){
+    const cats = PROGRAMME_CATALOG[level].categories || {};
+    for(const cat in cats){
+      for(const prog in cats[cat]){
+        const match = cats[cat][prog].find(c=>c.code===code);
+        if(match) return match;
+      }
+    }
+  }
+  return null;
+}
+
+function mtShowSelectPanel(){
+  document.getElementById('mtSelectPanel').style.display = 'block';
+  document.getElementById('mtBuilderPanel').style.display = 'none';
+  document.getElementById('mtAuthPanel').style.display = 'none';
+}
+
+function mtRenderLevelGrid(){
+  document.getElementById('mtSelectLevelView').style.display = 'block';
+  document.getElementById('mtSelectProgrammeView').style.display = 'none';
+  document.getElementById('mtSelectCoursesView').style.display = 'none';
+  const grid = document.getElementById('mtLevelGrid');
+  grid.innerHTML = "";
+  ["100","200","300","400"].forEach(lvl=>{
+    const b = document.createElement('div');
+    b.className = 'mt-level-btn';
+    b.textContent = 'Level ' + lvl;
+    b.onclick = ()=>{ mtSelectedLevel = lvl; mtRenderProgrammeView(); };
+    grid.appendChild(b);
+  });
+}
+
+function mtRenderProgrammeView(){
+  document.getElementById('mtSelectLevelView').style.display = 'none';
+  document.getElementById('mtSelectProgrammeView').style.display = 'block';
+  const wrap = document.getElementById('mtProgrammeGroups');
+  wrap.innerHTML = "";
+  const levelData = PROGRAMME_CATALOG[mtSelectedLevel];
+  if(!levelData || !levelData.categories || !Object.keys(levelData.categories).length){
+    wrap.appendChild(el(`<div class="empty-state">No programmes have been added for Level ${mtSelectedLevel} yet — check back soon, or contact the admin.</div>`));
+    return;
+  }
+  Object.entries(levelData.categories).forEach(([category, programmes])=>{
+    const group = el(`<div class="mt-programme-group"><h4>${category}</h4></div>`);
+    Object.keys(programmes).forEach(progName=>{
+      const btn = el(`<button class="mt-programme-btn">${progName}</button>`);
+      btn.onclick = ()=>{ mtSelectedProgramme = progName; mtRenderCoursesView(programmes[progName]); };
+      group.appendChild(btn);
+    });
+    wrap.appendChild(group);
+  });
+}
+
+function mtRenderCoursesView(courses){
+  document.getElementById('mtSelectProgrammeView').style.display = 'none';
+  document.getElementById('mtSelectCoursesView').style.display = 'block';
+  mtSelectedCourses = [];
+  const wrap = document.getElementById('mtCourseRows');
+  wrap.innerHTML = "";
+  courses.forEach(c=>{
+    const row = el(`
+      <div class="mt-course-row">
+        <div><div class="code">${c.code}</div><div class="name">${c.name}</div></div>
+        <button class="mt-add-btn">+ ADD</button>
+      </div>
+    `);
+    const btn = row.querySelector('.mt-add-btn');
+    btn.onclick = ()=>{
+      const idx = mtSelectedCourses.findIndex(x=>x.code===c.code);
+      if(idx > -1){
+        mtSelectedCourses.splice(idx,1);
+        btn.textContent = '+ ADD';
+        btn.classList.remove('added');
+      } else {
+        mtSelectedCourses.push(c);
+        btn.textContent = '✓ ADDED';
+        btn.classList.add('added');
+      }
+      mtRenderMyCourses();
+    };
+    wrap.appendChild(row);
+  });
+  mtRenderMyCourses();
+}
+
+function mtRenderMyCourses(){
+  const box = document.getElementById('mtMyCourses');
+  if(!mtSelectedCourses.length){ box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  document.getElementById('mtCourseCount').textContent = `${mtSelectedCourses.length} course${mtSelectedCourses.length===1?'':'s'} selected`;
+  const chips = document.getElementById('mtCourseChips');
+  chips.innerHTML = "";
+  mtSelectedCourses.forEach(c=> chips.appendChild(el(`<span class="chip">${c.code}</span>`)) );
+}
+
+function mtContinueToBuilder(){
+  mtSessions = mtSessions.filter(s => mtSelectedCourses.some(c=>c.code===s.courseCode)); // drop sessions for removed courses
+  mtShowBuilder();
+}
+
+function mtShowBuilder(){
+  document.getElementById('mtSelectPanel').style.display = 'none';
+  document.getElementById('mtBuilderPanel').style.display = 'block';
+  document.getElementById('mtProfileLevel').textContent = 'Level ' + mtSelectedLevel;
+  document.getElementById('mtProfileProgramme').textContent = mtSelectedProgramme || '';
+  document.getElementById('mtLoggedInAs').textContent = studentUsername;
+  mtRenderDayTabs();
+  mtRenderSessions();
+}
+
+function mtEditSelections(){
+  mtShowSelectPanel();
+  mtRenderProgrammeView();
+}
+
+function mtRenderDayTabs(){
+  const wrap = document.getElementById('mtDayTabs');
+  wrap.innerHTML = "";
+  ["Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d=>{
+    const b = document.createElement('button');
+    b.textContent = d;
+    if(d===mtCurrentDay) b.classList.add('active');
+    b.onclick = ()=>{ mtCurrentDay = d; mtRenderDayTabs(); mtRenderSessions(); };
+    wrap.appendChild(b);
+  });
+}
+
+function mtTimeToMinutes(t){
+  const [h,m] = t.split(':').map(Number);
+  return h*60 + (m||0);
+}
+
+function mtFindConflict(day, start, end, excludeIndex){
+  const s1 = mtTimeToMinutes(start), e1 = mtTimeToMinutes(end);
+  return mtSessions.find((s,i)=>{
+    if(i === excludeIndex) return false;
+    if(s.day !== day) return false;
+    const s2 = mtTimeToMinutes(s.startTime), e2 = mtTimeToMinutes(s.endTime);
+    return s1 < e2 && s2 < e1;
+  });
+}
+
+function mtRenderSessions(){
+  const list = document.getElementById('mtSessionsList');
+  list.innerHTML = "";
+  const todays = mtSessions.filter(s=>s.day===mtCurrentDay).sort((a,b)=>a.startTime.localeCompare(b.startTime));
+  if(!todays.length){
+    list.appendChild(el(`<div class="empty-state">No sessions on this day yet. Tap "+ Add Session" to add one.</div>`));
+    return;
+  }
+  todays.forEach(s=>{
+    const realIndex = mtSessions.indexOf(s);
+    const card = el(`
+      <div class="mt-session-card">
+        <div class="code">${s.courseCode}</div>
+        <div class="title">${s.sessionType} · ${s.startTime}–${s.endTime}</div>
+        <div class="meta"><span>👤 ${s.lecturer || '—'}</span><span>📍 ${s.venue || '—'}</span></div>
+      </div>
+    `);
+    card.onclick = ()=> mtOpenSessionForm(realIndex);
+    list.appendChild(card);
+  });
+}
+
+function mtOpenSessionForm(editIndex){
+  mtEditingIndex = (editIndex !== undefined) ? editIndex : null;
+  const existing = mtEditingIndex !== null ? mtSessions[mtEditingIndex] : null;
+  const form = document.getElementById('mtSessionForm');
+  form.style.display = 'block';
+  document.getElementById('mtAddSessionBtn').style.display = 'none';
+
+  const courseOptions = mtSelectedCourses.map(c=>`<option value="${c.code}" ${existing && existing.courseCode===c.code ? 'selected':''}>${c.code} — ${c.name}</option>`).join('');
+  const dayOptions = ["Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<option ${existing && existing.day===d ? 'selected':''}>${d}</option>`).join('');
+  const typeOptions = ["Lecture","Tutorial","Laboratory","Practical","Seminar","Other"].map(t=>`<option ${existing && existing.sessionType===t ? 'selected':''}>${t}</option>`).join('');
+
+  form.innerHTML = `
+    <div class="field-gap"><label>Course</label><select id="mtfCourse" style="width:100%; padding:11px; border:1px solid var(--line); border-radius:8px;">${courseOptions}</select></div>
+    <div class="field-gap"><label>Session type</label><select id="mtfType" style="width:100%; padding:11px; border:1px solid var(--line); border-radius:8px;">${typeOptions}</select></div>
+    <div class="field-gap"><label>Day</label><select id="mtfDay" style="width:100%; padding:11px; border:1px solid var(--line); border-radius:8px;">${dayOptions}</select></div>
+    <div class="field-gap" style="display:flex; gap:10px;">
+      <div style="flex:1;"><label>Start time</label><input type="time" id="mtfStart" value="${existing ? existing.startTime : '08:00'}"></div>
+      <div style="flex:1;"><label>End time</label><input type="time" id="mtfEnd" value="${existing ? existing.endTime : '10:00'}"></div>
+    </div>
+    <div class="field-gap"><label>Lecturer</label><input type="text" id="mtfLecturer" value="${existing ? existing.lecturer||'' : ''}"></div>
+    <div class="field-gap"><label>Venue</label><input type="text" id="mtfVenue" value="${existing ? existing.venue||'' : ''}"></div>
+    <div class="mt-error" id="mtfError"></div>
+    <div style="display:flex; gap:10px;">
+      ${mtEditingIndex !== null ? `<button style="flex:1; background:none; border:1px solid var(--red); color:var(--red); border-radius:8px; padding:11px; font-weight:600;" onclick="mtDeleteSession(${mtEditingIndex})">Delete</button>` : ''}
+      <button style="flex:1; background:none; border:1px solid var(--line); border-radius:8px; padding:11px; font-weight:600;" onclick="mtCloseSessionForm()">Cancel</button>
+      <button style="flex:2; background:var(--gold); color:var(--navy-deep); border:none; border-radius:8px; padding:11px; font-weight:700;" onclick="mtSaveSession()">Save Session</button>
+    </div>
+  `;
+  form.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function mtCloseSessionForm(){
+  document.getElementById('mtSessionForm').style.display = 'none';
+  document.getElementById('mtAddSessionBtn').style.display = 'block';
+  mtEditingIndex = null;
+}
+
+function mtSaveSession(){
+  const courseCode = document.getElementById('mtfCourse').value;
+  const sessionType = document.getElementById('mtfType').value;
+  const day = document.getElementById('mtfDay').value;
+  const startTime = document.getElementById('mtfStart').value;
+  const endTime = document.getElementById('mtfEnd').value;
+  const lecturer = document.getElementById('mtfLecturer').value;
+  const venue = document.getElementById('mtfVenue').value;
+  const errEl = document.getElementById('mtfError');
+
+  if(mtTimeToMinutes(endTime) <= mtTimeToMinutes(startTime)){
+    errEl.textContent = "End time must be after the start time.";
+    return;
+  }
+  const conflict = mtFindConflict(day, startTime, endTime, mtEditingIndex);
+  if(conflict){
+    errEl.textContent = `⚠️ Time conflict — you already have ${conflict.courseCode} on ${day}, ${conflict.startTime}–${conflict.endTime}.`;
+    return;
+  }
+
+  const session = { courseCode, sessionType, day, startTime, endTime, lecturer, venue };
+  if(mtEditingIndex !== null){
+    mtSessions[mtEditingIndex] = session;
+  } else {
+    mtSessions.push(session);
+  }
+  mtCurrentDay = day;
+  mtCloseSessionForm();
+  mtRenderDayTabs();
+  mtRenderSessions();
+}
+
+function mtDeleteSession(index){
+  mtSessions.splice(index,1);
+  mtCloseSessionForm();
+  mtRenderSessions();
+}
+
+async function mtSaveTimetable(){
+  try{
+    const res = await fetch('/api/student/timetable', {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        username: studentUsername,
+        password: studentPassword,
+        level: mtSelectedLevel,
+        programme: mtSelectedProgramme,
+        selectedCourses: mtSelectedCourses.map(c=>c.code),
+        timetableSessions: mtSessions,
+      })
+    });
+    if(res.ok){ alert('Your timetable has been saved ✓'); }
+    else { alert('Could not save — try logging in again.'); }
+  }catch(e){ alert('Couldn\'t reach the server — try again.'); }
+}
+
+function mtLogout(){
+  studentUsername = null;
+  studentPassword = null;
+  studentAccount = null;
+  mtSelectedLevel = null;
+  mtSelectedProgramme = null;
+  mtSelectedCourses = [];
+  mtSessions = [];
+  document.getElementById('mtBuilderPanel').style.display = 'none';
+  document.getElementById('mtSelectPanel').style.display = 'none';
+  document.getElementById('mtAuthPanel').style.display = 'block';
+  document.getElementById('mtLoginUsername').value = '';
+  document.getElementById('mtLoginPassword').value = '';
 }
 
 function renderAll(){
@@ -1097,6 +1701,8 @@ function renderAll(){
   renderNewsCategoryTabs();
   renderNews();
   renderUpdates();
+  renderQuickLinks();
+  renderAbout();
   // toggle registration nav visibility badge relevance
   document.getElementById('regTabBtn').style.opacity = currentLevel==="100" ? "1" : "0.55";
 }
