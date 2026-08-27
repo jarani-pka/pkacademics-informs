@@ -761,25 +761,11 @@
 
     <!-- AUTH PANEL -->
     <div id="mtAuthPanel" class="mt-panel">
-      <div class="mt-auth-toggle">
-        <button id="mtTabLogin" class="active" onclick="mtSwitchAuthTab('login')">Log In</button>
-        <button id="mtTabCreate" onclick="mtSwitchAuthTab('create')">Create Account</button>
-      </div>
-
-      <div id="mtLoginForm" class="mt-form">
-        <div class="field-gap"><label>Username</label><input type="text" id="mtLoginUsername"></div>
-        <div class="field-gap"><label>Password</label><input type="password" id="mtLoginPassword"></div>
-        <div class="mt-error" id="mtLoginError"></div>
-        <button class="mt-continue-btn" onclick="mtLogin()">Log In</button>
-        <p class="mt-hint">Don't have an account yet? Switch to "Create Account" above.</p>
-      </div>
-
-      <div id="mtCreateForm" class="mt-form" style="display:none;">
-        <div class="field-gap"><label>Choose a username</label><input type="text" id="mtCreateUsername" placeholder="e.g. kwame_100"></div>
-        <div class="field-gap"><label>Your phone number</label><input type="tel" id="mtCreatePhone" placeholder="e.g. 0244000000"></div>
-        <div class="mt-error" id="mtCreateError"></div>
-        <button class="mt-continue-btn" onclick="mtRequestAccount()">Request Account</button>
-        <p class="mt-hint">Your request goes to the site admin for approval. Once approved, you'll be given a password to log in — save your phone number correctly so they can verify it's really you.</p>
+      <div class="mt-form">
+        <div class="field-gap"><label>What's your name?</label><input type="text" id="mtNameInput" placeholder="e.g. Kwame Mensah"></div>
+        <div class="mt-error" id="mtNameError"></div>
+        <button class="mt-continue-btn" onclick="mtStart()">Start Building My Timetable</button>
+        <p class="mt-hint">Type the same name next time to pick up right where you left off — no password needed.</p>
       </div>
     </div>
 
@@ -824,7 +810,7 @@
       <div id="mtSessionForm" class="mt-form" style="display:none; margin-bottom:20px;"></div>
 
       <button class="mt-continue-btn" onclick="mtSaveTimetable()">Save My Timetable</button>
-      <p class="mt-hint" style="text-align:center;">Logged in as <strong id="mtLoggedInAs"></strong> · <a href="#" onclick="mtLogout(); return false;" style="color:var(--red);">Log out</a></p>
+      <p class="mt-hint" style="text-align:center;">Building as <strong id="mtLoggedInAs"></strong> · <a href="#" onclick="mtLogout(); return false;" style="color:var(--red);">Switch name</a></p>
     </div>
   </section>
 
@@ -1123,9 +1109,11 @@ function renderExams(){
   list.innerHTML = "";
   const lvl = DATA[currentLevel];
   lvl.exams.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(ex=>{
+    const thumb = ex.image ? `<img src="${ex.image}" style="width:48px; height:48px; object-fit:cover; border-radius:8px; margin-right:4px;">` : '';
     list.appendChild(el(`
       <div class="exam-item">
         <div class="exam-date"><div class="d">${ex.day}</div><div class="m">${ex.month}</div></div>
+        ${thumb}
         <div class="exam-course">
           <div class="code">${ex.code}</div>
           <div class="name">${ex.name}</div>
@@ -1228,10 +1216,13 @@ function renderHallReg(){
   const dir = document.getElementById('hallDirectory');
   dir.innerHTML = "";
   HALLS.forEach(h=>{
+    const iconOrPhoto = h.image
+      ? `<img src="${h.image}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:10px;">`
+      : `<div class="icon">🏠</div>`;
     dir.appendChild(el(`
       <div class="nav-card hall-card" style="cursor:default;">
         <span class="hall-type ${h.tag}">${h.type}</span>
-        <div class="icon">🏠</div>
+        ${iconOrPhoto}
         <h3>${h.name}</h3>
         <p>${h.note}</p>
         <div class="hall-meta">
@@ -1317,10 +1308,13 @@ function renderQuickLinks(){
     return;
   }
   QUICK_LINKS.forEach(l=>{
+    const iconOrPhoto = l.image
+      ? `<img src="${l.image}" style="width:38px; height:38px; object-fit:cover; border-radius:9px;">`
+      : `<div class="icon">🔗</div>`;
     const card = el(`
       <a class="nav-card" href="${l.url}" target="_blank" rel="noopener" style="text-decoration:none; display:block;">
         <span class="badge-new" style="background:var(--navy); color:#fff;">${l.category || 'Official'}</span>
-        <div class="icon">🔗</div>
+        ${iconOrPhoto}
         <h3>${l.name}</h3>
         <p>${l.description}</p>
         <div class="meta-row" style="margin-top:10px; border-top:none; padding-top:0;"><span>👥 ${l.audience || 'All students'}</span></div>
@@ -1340,7 +1334,6 @@ function renderAbout(){
 // ===================== MY TIMETABLE =====================
 let PROGRAMME_CATALOG = {};
 let studentUsername = null;
-let studentPassword = null;
 let studentAccount = null;
 
 let mtSelectedLevel = null;
@@ -1350,50 +1343,20 @@ let mtSessions = [];          // working copy of timetableSessions
 let mtEditingIndex = null;
 let mtCurrentDay = "Mon";
 
-function mtSwitchAuthTab(tab){
-  document.getElementById('mtTabLogin').classList.toggle('active', tab==='login');
-  document.getElementById('mtTabCreate').classList.toggle('active', tab==='create');
-  document.getElementById('mtLoginForm').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('mtCreateForm').style.display = tab==='create' ? 'block' : 'none';
-}
-
-async function mtLogin(){
-  const username = document.getElementById('mtLoginUsername').value.trim();
-  const password = document.getElementById('mtLoginPassword').value;
-  const errEl = document.getElementById('mtLoginError');
+async function mtStart(){
+  const name = document.getElementById('mtNameInput').value.trim();
+  const errEl = document.getElementById('mtNameError');
   errEl.textContent = "";
-  if(!username || !password){ errEl.textContent = "Enter both your username and password."; return; }
+  if(!name){ errEl.textContent = "Type your name to continue."; return; }
+  studentUsername = name;
   try{
-    const res = await fetch('/api/student/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({username, password})
-    });
-    const data = await res.json();
-    if(!res.ok){ errEl.textContent = data.error || "Login failed."; return; }
-    studentUsername = username;
-    studentPassword = password;
-    studentAccount = data.account;
+    const res = await fetch('/api/timetables/' + encodeURIComponent(name));
+    if(res.ok){
+      studentAccount = await res.json();
+    } else {
+      studentAccount = { level:null, programme:null, selectedCourses:[], timetableSessions:[] };
+    }
     mtEnterAccount();
-  }catch(e){ errEl.textContent = "Couldn't reach the server — try again."; }
-}
-
-async function mtRequestAccount(){
-  const username = document.getElementById('mtCreateUsername').value.trim();
-  const phone = document.getElementById('mtCreatePhone').value.trim();
-  const errEl = document.getElementById('mtCreateError');
-  errEl.textContent = "";
-  if(!username || !phone){ errEl.textContent = "Enter a username and your phone number."; return; }
-  try{
-    const res = await fetch('/api/student/request', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({username, phone})
-    });
-    const data = await res.json();
-    if(!res.ok){ errEl.textContent = data.error || "Request failed."; return; }
-    errEl.style.color = 'var(--green)';
-    errEl.textContent = "Request sent! You'll be given a password once approved — check with the admin.";
-    document.getElementById('mtCreateUsername').value = "";
-    document.getElementById('mtCreatePhone').value = "";
   }catch(e){ errEl.textContent = "Couldn't reach the server — try again."; }
 }
 
@@ -1658,26 +1621,23 @@ function mtDeleteSession(index){
 
 async function mtSaveTimetable(){
   try{
-    const res = await fetch('/api/student/timetable', {
+    const res = await fetch('/api/timetables/' + encodeURIComponent(studentUsername), {
       method:'PUT',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        username: studentUsername,
-        password: studentPassword,
         level: mtSelectedLevel,
         programme: mtSelectedProgramme,
         selectedCourses: mtSelectedCourses.map(c=>c.code),
         timetableSessions: mtSessions,
       })
     });
-    if(res.ok){ alert('Your timetable has been saved ✓'); }
-    else { alert('Could not save — try logging in again.'); }
+    if(res.ok){ alert('Your timetable has been saved ✓ Type the same name next time to see it again.'); }
+    else { alert('Could not save — try again.'); }
   }catch(e){ alert('Couldn\'t reach the server — try again.'); }
 }
 
 function mtLogout(){
   studentUsername = null;
-  studentPassword = null;
   studentAccount = null;
   mtSelectedLevel = null;
   mtSelectedProgramme = null;
@@ -1686,8 +1646,7 @@ function mtLogout(){
   document.getElementById('mtBuilderPanel').style.display = 'none';
   document.getElementById('mtSelectPanel').style.display = 'none';
   document.getElementById('mtAuthPanel').style.display = 'block';
-  document.getElementById('mtLoginUsername').value = '';
-  document.getElementById('mtLoginPassword').value = '';
+  document.getElementById('mtNameInput').value = '';
 }
 
 function renderAll(){

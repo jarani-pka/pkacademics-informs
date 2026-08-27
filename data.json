@@ -90,7 +90,8 @@
           "month": "DEC",
           "day": "08",
           "time": "9:00 AM",
-          "venue": "Great Hall"
+          "venue": "Great Hall",
+          "image": null
         },
         {
           "code": "MATH 121",
@@ -99,7 +100,8 @@
           "month": "DEC",
           "day": "10",
           "time": "2:00 PM",
-          "venue": "Sports Stadium"
+          "venue": "Sports Stadium",
+          "image": null
         },
         {
           "code": "CSCD 101",
@@ -108,7 +110,8 @@
           "month": "DEC",
           "day": "12",
           "time": "9:00 AM",
-          "venue": "JQB Complex"
+          "venue": "JQB Complex",
+          "image": null
         },
         {
           "code": "UGRC 150",
@@ -117,7 +120,8 @@
           "month": "DEC",
           "day": "15",
           "time": "9:00 AM",
-          "venue": "N-Block"
+          "venue": "N-Block",
+          "image": null
         },
         {
           "code": "UGRC 130",
@@ -126,7 +130,8 @@
           "month": "DEC",
           "day": "17",
           "time": "2:00 PM",
-          "venue": "Great Hall"
+          "venue": "Great Hall",
+          "image": null
         }
       ],
       "pastQ": [
@@ -227,7 +232,8 @@
           "month": "DEC",
           "day": "09",
           "time": "9:00 AM",
-          "venue": "JQB Complex"
+          "venue": "JQB Complex",
+          "image": null
         },
         {
           "code": "MATH 222",
@@ -236,7 +242,8 @@
           "month": "DEC",
           "day": "11",
           "time": "2:00 PM",
-          "venue": "Sports Stadium"
+          "venue": "Sports Stadium",
+          "image": null
         },
         {
           "code": "STAT 221",
@@ -245,7 +252,8 @@
           "month": "DEC",
           "day": "16",
           "time": "9:00 AM",
-          "venue": "N-Block"
+          "venue": "N-Block",
+          "image": null
         }
       ],
       "pastQ": [
@@ -312,7 +320,8 @@
           "month": "DEC",
           "day": "08",
           "time": "2:00 PM",
-          "venue": "JQB Complex"
+          "venue": "JQB Complex",
+          "image": null
         },
         {
           "code": "CSCD 311",
@@ -321,7 +330,8 @@
           "month": "DEC",
           "day": "12",
           "time": "9:00 AM",
-          "venue": "N-Block"
+          "venue": "N-Block",
+          "image": null
         }
       ],
       "pastQ": [
@@ -371,7 +381,8 @@
           "month": "DEC",
           "day": "09",
           "time": "9:00 AM",
-          "venue": "JQB Complex"
+          "venue": "JQB Complex",
+          "image": null
         }
       ],
       "pastQ": [
@@ -421,49 +432,56 @@
       "type": "Traditional Hall",
       "note": "One of the oldest traditional halls, known for its strong hall culture and traditions.",
       "gender": "Male",
-      "loc": "Central Campus"
+      "loc": "Central Campus",
+      "image": null
     },
     {
       "name": "Legon Hall",
       "type": "Traditional Hall",
       "note": "The founding hall of the University, split into Annie Jiagge and Republic Halls.",
       "gender": "Mixed (sections)",
-      "loc": "Central Campus"
+      "loc": "Central Campus",
+      "image": null
     },
     {
       "name": "Akuafo Hall",
       "type": "Traditional Hall",
       "note": "Traditional hall with a large student population and active hall associations.",
       "gender": "Mixed",
-      "loc": "Central Campus"
+      "loc": "Central Campus",
+      "image": null
     },
     {
       "name": "Volta Hall",
       "type": "Traditional Hall",
       "note": "One of the traditional halls historically associated with female students.",
       "gender": "Female",
-      "loc": "Central Campus"
+      "loc": "Central Campus",
+      "image": null
     },
     {
       "name": "Mensah Sarbah Hall",
       "type": "Traditional Hall",
       "note": "Traditional hall with strong sporting and cultural activities.",
       "gender": "Mixed",
-      "loc": "Central Campus"
+      "loc": "Central Campus",
+      "image": null
     },
     {
       "name": "International Students Hostel (ISH)",
       "type": "University Hostel",
       "note": "Managed accommodation with a mix of local and international students.",
       "gender": "Mixed",
-      "loc": "Near Central Campus"
+      "loc": "Near Central Campus",
+      "image": null
     },
     {
       "name": "Affiliate & Private Hostels",
       "type": "Private/Approved Hostel",
-      "note": "A range of university-approved private hostels around Legon — availability, price, and distance vary.",
+      "note": "A range of university-approved private hostels around Legon.",
       "gender": "Varies",
-      "loc": "Around campus"
+      "loc": "Around campus",
+      "image": null
     }
   ],
   "regSteps": [
@@ -619,28 +637,32 @@
       "description": "Register courses, view results, and manage your academic record.",
       "audience": "All students",
       "category": "Academic",
-      "url": "https://sts.ug.edu.gh"
+      "url": "https://sts.ug.edu.gh",
+      "image": null
     },
     {
       "name": "Sakai (UG-Sakai)",
       "description": "Access course materials, assignments, and announcements from lecturers.",
       "audience": "All students",
       "category": "Academic",
-      "url": "https://sakai.ug.edu.gh"
+      "url": "https://sakai.ug.edu.gh",
+      "image": null
     },
     {
       "name": "Balme Library",
       "description": "Search the library catalogue and access digital resources.",
       "audience": "All students",
       "category": "Library",
-      "url": "https://balmelibrary.ug.edu.gh"
+      "url": "https://balmelibrary.ug.edu.gh",
+      "image": null
     },
     {
       "name": "Academic Calendar",
       "description": "Official semester dates, registration windows, and exam periods.",
       "audience": "All students",
       "category": "Academic",
-      "url": "https://www.ug.edu.gh"
+      "url": "https://www.ug.edu.gh",
+      "image": null
     }
   ],
   "studentAccounts": [],

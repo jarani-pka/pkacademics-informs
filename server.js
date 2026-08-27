@@ -82,100 +82,42 @@ app.put("/api/admin/restore", requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- STUDENT ACCOUNTS ----------
+// ---------- PERSONAL TIMETABLES (no password — just a name) ----------
 
-// Student requests an account (public) — goes into a pending queue for admin approval
-app.post("/api/student/request", (req, res) => {
-  const { username, phone } = req.body;
-  if (!username || !phone) return res.status(400).json({ error: "Username and phone number are required." });
+// Save or update someone's personal timetable, identified only by the name they typed
+app.put("/api/timetables/:name", (req, res) => {
+  const name = req.params.name.trim();
+  if (!name) return res.status(400).json({ error: "A name is required." });
+  const { level, programme, selectedCourses, timetableSessions } = req.body;
   const data = readData();
-  if (data.studentAccounts.some(a => a.username.toLowerCase() === username.toLowerCase())) {
-    return res.status(409).json({ error: "That username is already taken or pending." });
+  let entry = data.studentAccounts.find(a => a.username.toLowerCase() === name.toLowerCase());
+  if (!entry) {
+    entry = { username: name, level: null, programme: null, selectedCourses: [], timetableSessions: [] };
+    data.studentAccounts.push(entry);
   }
-  data.studentAccounts.push({
-    username,
-    phone,
-    password: null,
-    status: "pending",
-    requestedAt: new Date().toISOString(),
-    level: null,
-    programme: null,
-    selectedCourses: [],
-    timetableSessions: [],
-    academicYear: null,
-    semester: null,
-  });
+  if (level !== undefined) entry.level = level;
+  if (programme !== undefined) entry.programme = programme;
+  if (selectedCourses !== undefined) entry.selectedCourses = selectedCourses;
+  if (timetableSessions !== undefined) entry.timetableSessions = timetableSessions;
   writeData(data);
   res.json({ ok: true });
 });
 
-// Student logs in with username + password (set by admin)
-app.post("/api/student/login", (req, res) => {
-  const { username, password } = req.body;
+// Load a saved personal timetable by name (returns 404 if this name hasn't saved one yet)
+app.get("/api/timetables/:name", (req, res) => {
+  const name = req.params.name.trim();
   const data = readData();
-  const account = data.studentAccounts.find(a => a.username.toLowerCase() === (username || "").toLowerCase());
-  if (!account || account.status !== "approved" || account.password !== password) {
-    return res.status(401).json({ error: "Incorrect username or password, or your account isn't approved yet." });
-  }
-  const { password: _pw, ...safe } = account;
-  res.json({ ok: true, account: safe });
+  const entry = data.studentAccounts.find(a => a.username.toLowerCase() === name.toLowerCase());
+  if (!entry) return res.status(404).json({ error: "No timetable found for that name yet." });
+  res.json(entry);
 });
 
-function requireStudent(req, res, next) {
-  const { username, password } = req.body;
-  const data = readData();
-  const account = data.studentAccounts.find(a => a.username.toLowerCase() === (username || "").toLowerCase());
-  if (!account || account.status !== "approved" || account.password !== password) {
-    return res.status(401).json({ error: "Not logged in." });
-  }
-  req.studentAccount = account;
-  req.fullData = data;
-  next();
-}
-
-// Student saves/updates their personal timetable
-app.put("/api/student/timetable", requireStudent, (req, res) => {
-  const { level, programme, selectedCourses, timetableSessions, academicYear, semester } = req.body;
-  const account = req.studentAccount;
-  if (level !== undefined) account.level = level;
-  if (programme !== undefined) account.programme = programme;
-  if (selectedCourses !== undefined) account.selectedCourses = selectedCourses;
-  if (timetableSessions !== undefined) account.timetableSessions = timetableSessions;
-  if (academicYear !== undefined) account.academicYear = academicYear;
-  if (semester !== undefined) account.semester = semester;
-  writeData(req.fullData);
-  res.json({ ok: true });
-});
-
-// ---------- ADMIN: manage student accounts ----------
+// ---------- ADMIN: view/manage saved personal timetables ----------
 app.get("/api/admin/student-accounts", requireAdmin, (req, res) => {
   const data = readData();
   res.json(data.studentAccounts);
 });
 
-// Approve a pending request and set their password
-app.put("/api/admin/student-accounts/:username/approve", requireAdmin, (req, res) => {
-  const data = readData();
-  const account = data.studentAccounts.find(a => a.username === req.params.username);
-  if (!account) return res.status(404).json({ error: "Account not found." });
-  account.status = "approved";
-  account.password = req.body.password;
-  account.approvedAt = new Date().toISOString();
-  writeData(data);
-  res.json({ ok: true });
-});
-
-// Reset an existing account's password
-app.put("/api/admin/student-accounts/:username/reset-password", requireAdmin, (req, res) => {
-  const data = readData();
-  const account = data.studentAccounts.find(a => a.username === req.params.username);
-  if (!account) return res.status(404).json({ error: "Account not found." });
-  account.password = req.body.password;
-  writeData(data);
-  res.json({ ok: true });
-});
-
-// Delete an account
 app.delete("/api/admin/student-accounts/:username", requireAdmin, (req, res) => {
   const data = readData();
   data.studentAccounts = data.studentAccounts.filter(a => a.username !== req.params.username);
