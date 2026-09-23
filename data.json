@@ -706,6 +706,292 @@
               "code": "UGRC 110",
               "name": "Academic Writing I"
             }
+          ],
+          "Accounting + Sociology + Chinese": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "SOCI 101",
+              "name": "Principles of Social Organizations"
+            },
+            {
+              "code": "SOCI 102",
+              "name": "Diversity of Peoples and Cultures"
+            },
+            {
+              "code": "CHIN 101",
+              "name": "Introduction to Chinese Studies"
+            },
+            {
+              "code": "CHIN 102",
+              "name": "Oral Communication Skills"
+            },
+            {
+              "code": "CHIN 103",
+              "name": "Elementary Chinese Grammar I"
+            },
+            {
+              "code": "CHIN 104",
+              "name": "Elementary Chinese Grammar II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Accounting + Economics + Mathematics": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "MATH 121",
+              "name": "Algebra and Trigonometry"
+            },
+            {
+              "code": "MATH 122",
+              "name": "Calculus"
+            },
+            {
+              "code": "MATH 123",
+              "name": "Vectors and Geometry"
+            },
+            {
+              "code": "MATH 124",
+              "name": "Mechanics"
+            },
+            {
+              "code": "ECON 101",
+              "name": "Introduction to Economics"
+            },
+            {
+              "code": "ECON 102",
+              "name": "Introduction to Economics II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Banking & Finance + Economics + Mathematics": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "MATH 121",
+              "name": "Algebra and Trigonometry"
+            },
+            {
+              "code": "MATH 122",
+              "name": "Calculus"
+            },
+            {
+              "code": "MATH 123",
+              "name": "Vectors and Geometry"
+            },
+            {
+              "code": "MATH 124",
+              "name": "Mechanics"
+            },
+            {
+              "code": "ECON 101",
+              "name": "Introduction to Economics"
+            },
+            {
+              "code": "ECON 102",
+              "name": "Introduction to Economics II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Banking & Finance + Economics + Information Studies": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "ECON 101",
+              "name": "Introduction to Economics"
+            },
+            {
+              "code": "ECON 102",
+              "name": "Introduction to Economics II"
+            },
+            {
+              "code": "INFS 111",
+              "name": "Information in Society"
+            },
+            {
+              "code": "INFS 112",
+              "name": "Introduction to Information Management"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Insurance + Economics + Mathematics": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "MATH 121",
+              "name": "Algebra and Trigonometry"
+            },
+            {
+              "code": "MATH 122",
+              "name": "Calculus"
+            },
+            {
+              "code": "MATH 123",
+              "name": "Vectors and Geometry"
+            },
+            {
+              "code": "MATH 124",
+              "name": "Mechanics"
+            },
+            {
+              "code": "ECON 101",
+              "name": "Introduction to Economics"
+            },
+            {
+              "code": "ECON 102",
+              "name": "Introduction to Economics II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Human Resource Management + Psychology + Chinese": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "PSYC 101",
+              "name": "Elements of Psychology"
+            },
+            {
+              "code": "PSYC 102",
+              "name": "Psychology for Everyday Living"
+            },
+            {
+              "code": "CHIN 101",
+              "name": "Introduction to Chinese Studies"
+            },
+            {
+              "code": "CHIN 102",
+              "name": "Oral Communication Skills"
+            },
+            {
+              "code": "CHIN 103",
+              "name": "Elementary Chinese Grammar I"
+            },
+            {
+              "code": "CHIN 104",
+              "name": "Elementary Chinese Grammar II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
+          ],
+          "Human Resource Management + Sociology + Spanish": [
+            {
+              "code": "UGBS 101",
+              "name": "Introduction to Business Administration"
+            },
+            {
+              "code": "UGBS 102",
+              "name": "Introduction to Computing in Business"
+            },
+            {
+              "code": "UGBS 104",
+              "name": "Principles of Management"
+            },
+            {
+              "code": "SOCI 101",
+              "name": "Principles of Social Organizations"
+            },
+            {
+              "code": "SOCI 102",
+              "name": "Diversity of Peoples and Cultures"
+            },
+            {
+              "code": "SPAN 101",
+              "name": "Introduction to Spanish Studies"
+            },
+            {
+              "code": "SPAN 102",
+              "name": "Oral Communication Skills"
+            },
+            {
+              "code": "SPAN 103",
+              "name": "Elementary Spanish Grammar I"
+            },
+            {
+              "code": "SPAN 104",
+              "name": "Elementary Spanish Grammar II"
+            },
+            {
+              "code": "UGRC 110",
+              "name": "Academic Writing I"
+            }
           ]
         }
       }
