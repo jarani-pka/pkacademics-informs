@@ -113,6 +113,7 @@
       <div class="tabs-inner" id="tabButtons">
         <button data-panel="exams" class="active">Exams</button>
         <button data-panel="pastq">Past Questions</button>
+        <button data-panel="catalog">Programmes & Courses</button>
         <button data-panel="news">News</button>
         <button data-panel="halls">Halls & Hostels</button>
         <button data-panel="quicklinks">UG Quick Links</button>
@@ -141,6 +142,33 @@
       <div class="panel-head"><h2>Past Questions</h2><button class="btn btn-gold" onclick="addPQ()">+ Add course</button></div>
       <div class="level-tabs" id="levelTabsPQ"></div>
       <div id="pqList"></div>
+    </section>
+
+    <!-- PROGRAMMES & COURSES (feeds My Timetable) -->
+    <section class="panel" id="panel-catalog">
+      <div class="panel-head"><h2>Programmes &amp; Courses</h2></div>
+      <p class="hint" style="margin-bottom:16px;">This is what students see in "My Timetable" when picking their college, combination and courses. Use official UG handbooks/department course lists — add one combination at a time by pasting its courses below.</p>
+      <div class="level-tabs" id="levelTabsCatalog"></div>
+
+      <div class="settings-grid" style="max-width:640px; margin:18px 0 28px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px;">
+        <div>
+          <label>College / Category</label>
+          <input id="catCollege" placeholder="e.g. College of Humanities">
+        </div>
+        <div>
+          <label>Combination / Programme name</label>
+          <input id="catCombo" placeholder="e.g. Political Science + Philosophy & Classics + Archaeology">
+        </div>
+        <div>
+          <label>Courses — one per line, as CODE | Course Title</label>
+          <textarea id="catCourses" style="width:100%; min-height:110px; padding:10px; border:1px solid var(--line); border-radius:8px; font-family:var(--font-mono); font-size:13px;" placeholder="POLI 111 | Introduction to Political Science
+PHCL 101 | Civilisations of the Ancient World
+UGRC 110 | Academic Writing I"></textarea>
+        </div>
+        <button class="btn btn-gold" style="width:fit-content;" onclick="addCatalogCombo()">Add / Update this combination</button>
+      </div>
+
+      <div id="catalogList"></div>
     </section>
 
     <!-- NEWS -->
@@ -327,6 +355,7 @@
 let ADMIN_PW = "";
 let DATA = null;
 let currentLevel = "100";
+let currentCatalogLevel = "100";
 let currentPanel = "exams";
 
 function showToast(msg){
@@ -372,6 +401,7 @@ async function loadData(){
   renderLevelTabs();
   renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates(); renderQuickLinks();
   renderWhatsapp(); renderVideos(); renderUgFeedPanel();
+  renderLevelTabsCatalog(); renderCatalog();
   loadStudentAccounts();
 }
 
@@ -435,6 +465,82 @@ function addQuickLink(){
   renderQuickLinks();
 }
 function removeQuickLink(i){ DATA.quickLinks.splice(i,1); renderQuickLinks(); }
+
+// ---------- PROGRAMMES & COURSES (catalog for My Timetable) ----------
+function renderLevelTabsCatalog(){
+  const wrap = document.getElementById('levelTabsCatalog');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  ["100","200","300","400"].forEach(lvl=>{
+    const b = document.createElement('button');
+    b.textContent = "Level " + lvl;
+    if(lvl===currentCatalogLevel) b.classList.add('active');
+    b.onclick = ()=>{ currentCatalogLevel = lvl; renderLevelTabsCatalog(); renderCatalog(); };
+    wrap.appendChild(b);
+  });
+}
+function renderCatalog(){
+  const wrap = document.getElementById('catalogList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  if(!DATA.programmeCatalog) DATA.programmeCatalog = {};
+  const levelData = DATA.programmeCatalog[currentCatalogLevel];
+  const categories = (levelData && levelData.categories) || {};
+  if(!Object.keys(categories).length){
+    wrap.appendChild(el2(`<div class="hint">No combinations added yet for Level ${currentCatalogLevel}.</div>`));
+    return;
+  }
+  Object.entries(categories).forEach(([college, combos])=>{
+    const section = document.createElement('div');
+    section.style.marginBottom = '22px';
+    section.innerHTML = `<h3 style="font-size:15px; color:var(--navy-deep); margin-bottom:8px;">${college}</h3>`;
+    Object.entries(combos).forEach(([comboName, courses])=>{
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      const linesText = courses.map(c=>`${c.code} | ${c.name}`).join('\n');
+      card.innerHTML = `
+        <div class="row"><div class="field"><span class="field-label">Combination</span><div style="padding:9px 0; font-weight:600; font-size:13.5px;">${comboName}</div></div></div>
+        <div class="row"><div class="field"><span class="field-label">${courses.length} course(s)</span>
+          <pre style="white-space:pre-wrap; font-family:var(--font-mono); font-size:12px; background:#F4F5F7; border-radius:6px; padding:8px; margin-top:6px;">${linesText}</pre>
+        </div></div>
+        <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeCatalogCombo('${college.replace(/'/g,"\\'")}','${comboName.replace(/'/g,"\\'")}')">Remove combination</button></div>
+      `;
+      section.appendChild(card);
+    });
+    wrap.appendChild(section);
+  });
+}
+function addCatalogCombo(){
+  const college = document.getElementById('catCollege').value.trim();
+  const combo = document.getElementById('catCombo').value.trim();
+  const raw = document.getElementById('catCourses').value;
+  if(!college || !combo){ showToast('College and combination name are both required.'); return; }
+  const courses = raw.split('\n').map(line=>line.trim()).filter(Boolean).map(line=>{
+    const [code, ...rest] = line.split('|');
+    return { code: (code||'').trim(), name: rest.join('|').trim() || (code||'').trim() };
+  }).filter(c=>c.code);
+  if(!courses.length){ showToast('Add at least one course line (CODE | Course Title).'); return; }
+
+  if(!DATA.programmeCatalog) DATA.programmeCatalog = {};
+  if(!DATA.programmeCatalog[currentCatalogLevel]) DATA.programmeCatalog[currentCatalogLevel] = { categories:{} };
+  if(!DATA.programmeCatalog[currentCatalogLevel].categories) DATA.programmeCatalog[currentCatalogLevel].categories = {};
+  const cats = DATA.programmeCatalog[currentCatalogLevel].categories;
+  if(!cats[college]) cats[college] = {};
+  cats[college][combo] = courses;
+
+  saveSection('programmeCatalog', DATA.programmeCatalog).then(()=>{
+    document.getElementById('catCourses').value = '';
+    renderCatalog();
+  });
+}
+function removeCatalogCombo(college, combo){
+  const cats = DATA.programmeCatalog[currentCatalogLevel].categories;
+  if(cats[college]){
+    delete cats[college][combo];
+    if(!Object.keys(cats[college]).length) delete cats[college];
+  }
+  saveSection('programmeCatalog', DATA.programmeCatalog).then(renderCatalog);
+}
 
 // ---------- WHATSAPP GROUPS ----------
 function renderWhatsapp(){
@@ -751,6 +857,7 @@ document.getElementById('tabButtons').addEventListener('click', (e)=>{
   document.getElementById('panel-'+currentPanel).classList.add('active');
   document.getElementById('saveBar').style.display = ['exams','pastq','news','halls','updates','quicklinks','whatsapp','videos','ugfeed'].includes(currentPanel) ? 'flex' : 'none';
   if(currentPanel === 'ugfeed') renderUgFeedPanel();
+  if(currentPanel === 'catalog') { renderLevelTabsCatalog(); renderCatalog(); }
 });
 
 function renderLevelTabs(){
