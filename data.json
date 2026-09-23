@@ -4,7 +4,10 @@
     "adminPassword": "PKA_Jarani246006",
     "siteName": "PKAcademics Informs",
     "tagline": "To the whole wiase of Legon",
-    "poweredBy": ""
+    "poweredBy": "",
+    "cronSecret": "749422667ccef6a9",
+    "ugSitemapUrl": "https://www.ug.edu.gh/sitemap.xml",
+    "ugNewsUrlPattern": "/news/"
   },
   "appearance": {
     "heroImage": null,
@@ -707,5 +710,13 @@
         }
       }
     }
+  },
+  "whatsappGroups": [],
+  "videos": [],
+  "ugFeed": {
+    "lastChecked": null,
+    "lastError": null,
+    "seenUrls": [],
+    "items": []
   }
 }

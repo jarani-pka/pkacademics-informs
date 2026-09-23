@@ -111,13 +111,15 @@
     </div>
     <div class="tabs">
       <div class="tabs-inner" id="tabButtons">
-        <button data-panel="courses" class="active">Timetable</button>
-        <button data-panel="exams">Exams</button>
+        <button data-panel="exams" class="active">Exams</button>
         <button data-panel="pastq">Past Questions</button>
         <button data-panel="news">News</button>
         <button data-panel="halls">Halls & Hostels</button>
         <button data-panel="quicklinks">UG Quick Links</button>
-        <button data-panel="students">Student Accounts</button>
+        <button data-panel="whatsapp">WhatsApp Groups</button>
+        <button data-panel="videos">Videos</button>
+        <button data-panel="ugfeed">Live UG Updates</button>
+        <button data-panel="timetables">Personal Timetables</button>
         <button data-panel="updates">What's New</button>
         <button data-panel="about">About Jarani</button>
         <button data-panel="appearance">Appearance</button>
@@ -127,15 +129,8 @@
   </div>
 
   <main>
-    <!-- COURSES / TIMETABLE -->
-    <section class="panel active" id="panel-courses">
-      <div class="panel-head"><h2>Timetable</h2><button class="btn btn-gold" onclick="addCourse()">+ Add class</button></div>
-      <div class="level-tabs" id="levelTabsCourses"></div>
-      <div id="courseList"></div>
-    </section>
-
     <!-- EXAMS -->
-    <section class="panel" id="panel-exams">
+    <section class="panel active" id="panel-exams">
       <div class="panel-head"><h2>Exam Schedule</h2><button class="btn btn-gold" onclick="addExam()">+ Add exam</button></div>
       <div class="level-tabs" id="levelTabsExams"></div>
       <div id="examList"></div>
@@ -166,19 +161,64 @@
       <div id="quickLinksList"></div>
     </section>
 
+    <!-- WHATSAPP GROUPS -->
+    <section class="panel" id="panel-whatsapp">
+      <div class="panel-head"><h2>WhatsApp Groups</h2><button class="btn btn-gold" onclick="addWhatsapp()">+ Add group</button></div>
+      <div id="whatsappList"></div>
+    </section>
+
+    <!-- VIDEOS -->
+    <section class="panel" id="panel-videos">
+      <div class="panel-head"><h2>Videos</h2><button class="btn btn-gold" onclick="addVideo()">+ Add video</button></div>
+      <div id="videosList"></div>
+    </section>
+
+    <!-- LIVE UG UPDATES -->
+    <section class="panel" id="panel-ugfeed">
+      <div class="panel-head"><h2>Live UG Updates</h2><button class="btn" onclick="runUgFeedCheck()">Run check now</button></div>
+      <p class="hint" style="margin-bottom:16px;">Automatically detects new articles on ug.edu.gh from their sitemap and shows an "Official Source" card that links out — no article text is copied, per copyright rules.</p>
+
+      <div class="settings-grid" style="max-width:640px; margin-bottom:24px;">
+        <div>
+          <label>UG sitemap URL</label>
+          <input id="setUgSitemapUrl" placeholder="https://www.ug.edu.gh/sitemap.xml">
+        </div>
+        <div>
+          <label>News URL pattern (only URLs containing this are treated as news)</label>
+          <input id="setUgNewsPattern" placeholder="/news/">
+        </div>
+        <div>
+          <label>Cron secret</label>
+          <div style="display:flex; gap:8px;">
+            <input id="setCronSecret" style="flex:1;">
+            <button class="btn" onclick="regenCronSecret()">Regenerate</button>
+          </div>
+          <div class="hint">Part of the URL below — regenerating breaks any scheduler already using the old one.</div>
+        </div>
+        <div>
+          <label>Scheduler URL (paste this into a free service like cron-job.org, every 15–30 min)</label>
+          <div style="display:flex; gap:8px;">
+            <input id="cronUrlDisplay" readonly style="flex:1; background:#F4F5F7;">
+            <button class="btn" onclick="copyCronUrl()">Copy</button>
+          </div>
+          <div class="hint">This also wakes a sleeping free-tier Render instance when the scheduler pings it.</div>
+        </div>
+        <button class="btn btn-gold" style="width:fit-content;" onclick="saveUgFeedConfig()">Save configuration</button>
+      </div>
+
+      <div id="ugFeedStatus" class="hint" style="margin-bottom:16px;"></div>
+      <div class="panel-head"><h2 style="font-size:16px;">Detected items</h2></div>
+      <div id="ugFeedItemsList"></div>
+    </section>
+
     <!-- STUDENT ACCOUNTS -->
-    <section class="panel" id="panel-students">
+    <section class="panel" id="panel-timetables">
       <div class="panel-head">
-        <h2>Student Accounts</h2>
+        <h2>Personal Timetables</h2>
         <button class="btn" onclick="loadStudentAccounts()">Refresh</button>
       </div>
-      <p class="hint" style="margin-bottom:16px;">Students request an account with a username and phone number. Approve a request and set their password yourself — that's what they'll use to log in and see their saved timetable.</p>
-
-      <h3 style="font-size:15px; margin-bottom:10px; color:var(--navy-deep);">Pending requests</h3>
-      <div id="pendingAccountsList" style="margin-bottom:32px;"></div>
-
-      <h3 style="font-size:15px; margin-bottom:10px; color:var(--navy-deep);">Approved accounts</h3>
-      <div id="approvedAccountsList"></div>
+      <p class="hint" style="margin-bottom:16px;">No approval needed anymore — anyone can type a name and build their own timetable. This is just a read-only view of what's been saved so far.</p>
+      <div id="timetablesList"></div>
     </section>
 
     <!-- WHAT'S NEW -->
@@ -287,7 +327,7 @@
 let ADMIN_PW = "";
 let DATA = null;
 let currentLevel = "100";
-let currentPanel = "courses";
+let currentPanel = "exams";
 
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -330,7 +370,8 @@ async function loadData(){
   document.getElementById('setAboutClosing').value = about.closing || '';
   renderAppearancePreviews();
   renderLevelTabs();
-  renderCourses(); renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates(); renderQuickLinks();
+  renderExams(); renderPQ(); renderNews(); renderHalls(); renderUpdates(); renderQuickLinks();
+  renderWhatsapp(); renderVideos(); renderUgFeedPanel();
   loadStudentAccounts();
 }
 
@@ -368,19 +409,185 @@ function quickLinkCard(l,i){
       <div class="field"><span class="field-label">Link (https://...)</span><input value="${l.url}" data-f="url"></div>
     </div>
     <div class="row"><div class="field"><span class="field-label">Description</span><textarea data-f="description">${l.description}</textarea></div></div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Icon / thumbnail (optional)</span>
+        <input type="file" accept="image/*" data-img="image">
+        ${l.image ? `<img src="${l.image}" style="max-width:100px; border-radius:6px; margin-top:6px; display:block;">` : ''}
+      </div>
+    </div>
     <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeQuickLink(${i})">Remove</button></div>
   `;
   div.querySelectorAll('[data-f]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ l[inp.dataset.f] = inp.value; });
   });
+  div.querySelectorAll('[data-img]').forEach(inp=>{
+    inp.addEventListener('change', async ()=>{
+      const file = inp.files[0];
+      if(file){ l[inp.dataset.img] = await fileToDataUrl(file); showToast('Photo attached — remember to Save changes'); }
+    });
+  });
   return div;
 }
 function addQuickLink(){
   if(!DATA.quickLinks) DATA.quickLinks = [];
-  DATA.quickLinks.push({name:"", description:"", audience:"All students", category:"Academic", url:"https://"});
+  DATA.quickLinks.push({name:"", description:"", audience:"All students", category:"Academic", url:"https://", image:null});
   renderQuickLinks();
 }
 function removeQuickLink(i){ DATA.quickLinks.splice(i,1); renderQuickLinks(); }
+
+// ---------- WHATSAPP GROUPS ----------
+function renderWhatsapp(){
+  const wrap = document.getElementById('whatsappList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  (DATA.whatsappGroups || []).forEach((g,i)=> wrap.appendChild(whatsappCard(g,i)));
+}
+function whatsappCard(g,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Group name</span><input value="${g.name||''}" data-f="name" placeholder="e.g. Level 100 General"></div>
+      <div class="field"><span class="field-label">Invite link (https://chat.whatsapp.com/...)</span><input value="${g.link||''}" data-f="link"></div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Description (optional)</span><input value="${g.description||''}" data-f="description"></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeWhatsapp(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ g[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addWhatsapp(){
+  if(!DATA.whatsappGroups) DATA.whatsappGroups = [];
+  DATA.whatsappGroups.push({name:"", link:"https://chat.whatsapp.com/", description:""});
+  renderWhatsapp();
+}
+function removeWhatsapp(i){ DATA.whatsappGroups.splice(i,1); renderWhatsapp(); }
+
+// ---------- VIDEOS ----------
+function renderVideos(){
+  const wrap = document.getElementById('videosList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  (DATA.videos || []).forEach((v,i)=> wrap.appendChild(videoCard(v,i)));
+}
+function videoCard(v,i){
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <div class="row">
+      <div class="field"><span class="field-label">Title</span><input value="${v.title||''}" data-f="title"></div>
+      <div class="field"><span class="field-label">Video link (YouTube link embeds automatically)</span><input value="${v.url||''}" data-f="url"></div>
+    </div>
+    <div class="row"><div class="field"><span class="field-label">Description (optional)</span><input value="${v.description||''}" data-f="description"></div></div>
+    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeVideo(${i})">Remove</button></div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ v[inp.dataset.f] = inp.value; });
+  });
+  return div;
+}
+function addVideo(){
+  if(!DATA.videos) DATA.videos = [];
+  DATA.videos.push({title:"", url:"https://", description:""});
+  renderVideos();
+}
+function removeVideo(i){ DATA.videos.splice(i,1); renderVideos(); }
+
+// ---------- LIVE UG UPDATES ----------
+function renderUgFeedPanel(){
+  if(!DATA.ugFeed) DATA.ugFeed = { lastChecked:null, lastError:null, seenUrls:[], items:[] };
+  const s = DATA.settings || {};
+  document.getElementById('setUgSitemapUrl').value = s.ugSitemapUrl || 'https://www.ug.edu.gh/sitemap.xml';
+  document.getElementById('setUgNewsPattern').value = s.ugNewsUrlPattern || '/news/';
+  document.getElementById('setCronSecret').value = s.cronSecret || '';
+  updateCronUrlDisplay();
+
+  const statusEl = document.getElementById('ugFeedStatus');
+  const f = DATA.ugFeed;
+  const lastChecked = f.lastChecked ? new Date(f.lastChecked).toLocaleString() : 'never';
+  statusEl.innerHTML = f.lastError
+    ? `Last checked: ${lastChecked} — <span style="color:var(--red); font-weight:600;">error: ${f.lastError}</span>`
+    : `Last checked: ${lastChecked} · ${f.items.length} item(s) currently shown on the site`;
+
+  const wrap = document.getElementById('ugFeedItemsList');
+  wrap.innerHTML = "";
+  if(!f.items.length){
+    wrap.appendChild(el2(`<div class="hint">No items detected yet — click "Run check now" or wait for the scheduled check.</div>`));
+    return;
+  }
+  f.items.forEach((item,i)=>{
+    const div = document.createElement('div');
+    div.className = 'item-card';
+    div.innerHTML = `
+      <div class="row">
+        <div class="field"><span class="field-label">Title</span><div style="padding:9px 0; font-size:13.5px;">${item.title}</div></div>
+      </div>
+      <div class="row"><div class="field"><span class="field-label">Link</span><div style="padding:9px 0; font-size:12px; color:var(--ink-soft); word-break:break-all;"><a href="${item.url}" target="_blank">${item.url}</a></div></div></div>
+      <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeUgFeedItem(${i})">Remove</button></div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+function el2(html){
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+function removeUgFeedItem(i){ DATA.ugFeed.items.splice(i,1); renderUgFeedPanel(); }
+function updateCronUrlDisplay(){
+  const secret = document.getElementById('setCronSecret').value;
+  document.getElementById('cronUrlDisplay').value = `${window.location.origin}/api/cron/check-ug-feed?secret=${secret}`;
+}
+document.getElementById('setCronSecret').addEventListener('input', updateCronUrlDisplay);
+function regenCronSecret(){
+  const secret = Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b=>b.toString(16).padStart(2,'0')).join('');
+  document.getElementById('setCronSecret').value = secret;
+  updateCronUrlDisplay();
+  showToast('New secret generated — remember to Save configuration');
+}
+function copyCronUrl(){
+  const input = document.getElementById('cronUrlDisplay');
+  input.select();
+  navigator.clipboard?.writeText(input.value);
+  showToast('Scheduler URL copied ✓');
+}
+async function saveUgFeedConfig(){
+  const body = {
+    ugSitemapUrl: document.getElementById('setUgSitemapUrl').value,
+    ugNewsUrlPattern: document.getElementById('setUgNewsPattern').value,
+    cronSecret: document.getElementById('setCronSecret').value,
+  };
+  const res = await fetch('/api/admin/settings', {
+    method:'PUT',
+    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
+    body: JSON.stringify(body)
+  });
+  if(res.ok){
+    Object.assign(DATA.settings, body);
+    showToast('Live-updates configuration saved ✓');
+  } else {
+    showToast('Failed to save.');
+  }
+}
+async function runUgFeedCheck(){
+  showToast('Checking ug.edu.gh…');
+  try{
+    const res = await fetch('/api/admin/ug-feed/check', { method:'POST', headers:{'x-admin-password': ADMIN_PW} });
+    const result = await res.json();
+    await loadData();
+    document.getElementById('panel-ugfeed').classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>{ if(p.id!=='panel-ugfeed') p.classList.remove('active'); });
+    document.querySelectorAll('#tabButtons button').forEach(b=>b.classList.toggle('active', b.dataset.panel==='ugfeed'));
+    currentPanel = 'ugfeed';
+    document.getElementById('saveBar').style.display = 'flex';
+    showToast(result.ok ? `Check complete — ${result.newCount} new item(s)` : `Check failed: ${result.error}`);
+  }catch(e){
+    showToast('Check failed — see console for details.');
+  }
+}
 
 // ---------- STUDENT ACCOUNTS ----------
 let STUDENT_ACCOUNTS = [];
@@ -392,102 +599,39 @@ async function loadStudentAccounts(){
 }
 
 function renderStudentAccounts(){
-  const pendingWrap = document.getElementById('pendingAccountsList');
-  const approvedWrap = document.getElementById('approvedAccountsList');
-  pendingWrap.innerHTML = "";
-  approvedWrap.innerHTML = "";
-
-  const pending = STUDENT_ACCOUNTS.filter(a => a.status === 'pending');
-  const approved = STUDENT_ACCOUNTS.filter(a => a.status === 'approved');
-
-  if(!pending.length){
-    pendingWrap.appendChild(el(`<div class="empty-state">No pending requests right now.</div>`));
-  } else {
-    pending.forEach(a=>{
-      pendingWrap.appendChild(el(`
-        <div class="item-card">
-          <div class="row">
-            <div class="field"><span class="field-label">Username</span><div style="padding:9px 0; font-weight:600;">${a.username}</div></div>
-            <div class="field"><span class="field-label">Phone</span><div style="padding:9px 0;">${a.phone}</div></div>
-          </div>
-          <div class="row">
-            <div class="field"><span class="field-label">Set their password</span><input type="text" id="pw-${a.username}" placeholder="Type a password for them"></div>
-          </div>
-          <div class="item-actions">
-            <button class="btn btn-red btn-sm" onclick="rejectAccount('${a.username}')">Reject</button>
-            <button class="btn btn-gold btn-sm" onclick="approveAccount('${a.username}')">Approve &amp; set password</button>
-          </div>
-        </div>
-      `));
-    });
+  const wrap = document.getElementById('timetablesList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  if(!STUDENT_ACCOUNTS.length){
+    wrap.appendChild(el(`<div class="empty-state">No one has built a personal timetable yet.</div>`));
+    return;
   }
-
-  if(!approved.length){
-    approvedWrap.appendChild(el(`<div class="empty-state">No approved student accounts yet.</div>`));
-  } else {
-    approved.forEach(a=>{
-      approvedWrap.appendChild(el(`
-        <div class="item-card">
-          <div class="row">
-            <div class="field"><span class="field-label">Username</span><div style="padding:9px 0; font-weight:600;">${a.username}</div></div>
-            <div class="field"><span class="field-label">Phone</span><div style="padding:9px 0;">${a.phone}</div></div>
-            <div class="field"><span class="field-label">Level / Programme</span><div style="padding:9px 0; font-size:12.5px; color:var(--ink-soft);">${a.level ? 'Level '+a.level : '—'} ${a.programme || ''}</div></div>
-          </div>
-          <div class="row">
-            <div class="field"><span class="field-label">Reset password</span><input type="text" id="reset-${a.username}" placeholder="New password"></div>
-          </div>
-          <div class="item-actions">
-            <button class="btn btn-red btn-sm" onclick="deleteAccount('${a.username}')">Delete account</button>
-            <button class="btn btn-sm" onclick="resetPassword('${a.username}')">Reset password</button>
-          </div>
+  STUDENT_ACCOUNTS.forEach(a=>{
+    const courseCount = (a.selectedCourses || []).length;
+    const sessionCount = (a.timetableSessions || []).length;
+    wrap.appendChild(el(`
+      <div class="item-card">
+        <div class="row">
+          <div class="field"><span class="field-label">Name</span><div style="padding:9px 0; font-weight:600;">${a.username}</div></div>
+          <div class="field"><span class="field-label">Level / Programme</span><div style="padding:9px 0; font-size:12.5px; color:var(--ink-soft);">${a.level ? 'Level '+a.level : '—'} ${a.programme || ''}</div></div>
+          <div class="field"><span class="field-label">Saved</span><div style="padding:9px 0; font-size:12.5px; color:var(--ink-soft);">${courseCount} courses · ${sessionCount} sessions</div></div>
         </div>
-      `));
-    });
-  }
-}
-
-async function approveAccount(username){
-  const pw = document.getElementById('pw-'+username).value.trim();
-  if(!pw){ showToast('Type a password first.'); return; }
-  const res = await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}/approve`, {
-    method:'PUT',
-    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
-    body: JSON.stringify({ password: pw })
+        <div class="item-actions">
+          <button class="btn btn-red btn-sm" onclick="deleteTimetable('${a.username}')">Delete</button>
+        </div>
+      </div>
+    `));
   });
-  if(res.ok){ showToast('Approved ✓ Share the username and password with them.'); loadStudentAccounts(); }
-  else { showToast('Failed to approve.'); }
 }
 
-async function rejectAccount(username){
-  if(!confirm(`Reject and delete the request from "${username}"?`)) return;
+async function deleteTimetable(username){
+  if(!confirm(`Delete "${username}"'s saved timetable?`)) return;
   await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}`, {
     method:'DELETE',
     headers:{'x-admin-password': ADMIN_PW}
   });
-  showToast('Request rejected.');
+  showToast('Deleted.');
   loadStudentAccounts();
-}
-
-async function deleteAccount(username){
-  if(!confirm(`Delete "${username}"'s account? This removes their saved timetable too.`)) return;
-  await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}`, {
-    method:'DELETE',
-    headers:{'x-admin-password': ADMIN_PW}
-  });
-  showToast('Account deleted.');
-  loadStudentAccounts();
-}
-
-async function resetPassword(username){
-  const pw = document.getElementById('reset-'+username).value.trim();
-  if(!pw){ showToast('Type a new password first.'); return; }
-  const res = await fetch(`/api/admin/student-accounts/${encodeURIComponent(username)}/reset-password`, {
-    method:'PUT',
-    headers:{'Content-Type':'application/json', 'x-admin-password': ADMIN_PW},
-    body: JSON.stringify({ password: pw })
-  });
-  if(res.ok){ showToast('Password reset ✓'); loadStudentAccounts(); }
-  else { showToast('Failed to reset.'); }
 }
 
 
@@ -605,62 +749,23 @@ document.getElementById('tabButtons').addEventListener('click', (e)=>{
   document.querySelectorAll('#tabButtons button').forEach(b=>b.classList.toggle('active', b===btn));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+currentPanel).classList.add('active');
-  document.getElementById('saveBar').style.display = ['courses','exams','pastq','news','halls','updates','quicklinks'].includes(currentPanel) ? 'flex' : 'none';
+  document.getElementById('saveBar').style.display = ['exams','pastq','news','halls','updates','quicklinks','whatsapp','videos','ugfeed'].includes(currentPanel) ? 'flex' : 'none';
+  if(currentPanel === 'ugfeed') renderUgFeedPanel();
 });
 
 function renderLevelTabs(){
-  ['levelTabsCourses','levelTabsExams','levelTabsPQ'].forEach(id=>{
+  ['levelTabsExams','levelTabsPQ'].forEach(id=>{
     const wrap = document.getElementById(id);
     wrap.innerHTML = "";
     ["100","200","300","400"].forEach(lvl=>{
       const b = document.createElement('button');
       b.textContent = "Level " + lvl;
       if(lvl===currentLevel) b.classList.add('active');
-      b.onclick = ()=>{ currentLevel = lvl; renderLevelTabs(); renderCourses(); renderExams(); renderPQ(); };
+      b.onclick = ()=>{ currentLevel = lvl; renderLevelTabs(); renderExams(); renderPQ(); };
       wrap.appendChild(b);
     });
   });
 }
-
-// ---------- COURSES ----------
-function renderCourses(){
-  const wrap = document.getElementById('courseList');
-  wrap.innerHTML = "";
-  const list = DATA.levels[currentLevel].courses;
-  list.forEach((c, i)=>{
-    wrap.appendChild(courseCard(c, i));
-  });
-}
-function courseCard(c, i){
-  const div = document.createElement('div');
-  div.className = 'item-card';
-  div.innerHTML = `
-    <div class="row">
-      <div class="field"><span class="field-label">Code</span><input value="${c.code}" data-f="code"></div>
-      <div class="field"><span class="field-label">Name</span><input value="${c.name}" data-f="name"></div>
-    </div>
-    <div class="row">
-      <div class="field"><span class="field-label">Day</span>
-        <select data-f="day">${["Mon","Tue","Wed","Thu","Fri"].map(d=>`<option ${d===c.day?'selected':''}>${d}</option>`).join('')}</select>
-      </div>
-      <div class="field"><span class="field-label">Time</span><input value="${c.time}" data-f="time"></div>
-      <div class="field"><span class="field-label">Type</span>
-        <select data-f="type">${["Lecture","Tutorial","Lab"].map(t=>`<option ${t===c.type?'selected':''}>${t}</option>`).join('')}</select>
-      </div>
-      <div class="field"><span class="field-label">Venue</span><input value="${c.venue}" data-f="venue"></div>
-    </div>
-    <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeCourse(${i})">Remove</button></div>
-  `;
-  div.querySelectorAll('[data-f]').forEach(inp=>{
-    inp.addEventListener('input', ()=>{ c[inp.dataset.f] = inp.value; });
-  });
-  return div;
-}
-function addCourse(){
-  DATA.levels[currentLevel].courses.push({code:"", name:"", day:"Mon", time:"", type:"Lecture", venue:""});
-  renderCourses();
-}
-function removeCourse(i){ DATA.levels[currentLevel].courses.splice(i,1); renderCourses(); }
 
 // ---------- EXAMS ----------
 function renderExams(){
@@ -683,15 +788,28 @@ function examCard(ex,i){
       <div class="field"><span class="field-label">Time</span><input value="${ex.time}" data-f="time"></div>
       <div class="field"><span class="field-label">Venue</span><input value="${ex.venue}" data-f="venue"></div>
     </div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Poster / flyer (optional)</span>
+        <input type="file" accept="image/*" capture="environment" data-img="image">
+        ${ex.image ? `<img src="${ex.image}" style="max-width:120px; border-radius:6px; margin-top:6px; display:block;">` : ''}
+      </div>
+    </div>
     <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeExam(${i})">Remove</button></div>
   `;
   div.querySelectorAll('[data-f]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ ex[inp.dataset.f] = inp.value; });
   });
+  div.querySelectorAll('[data-img]').forEach(inp=>{
+    inp.addEventListener('change', async ()=>{
+      const file = inp.files[0];
+      if(file){ ex[inp.dataset.img] = await fileToDataUrl(file); showToast('Photo attached — remember to Save changes'); }
+    });
+  });
   return div;
 }
 function addExam(){
-  DATA.levels[currentLevel].exams.push({code:"", name:"", date:"2026-12-01", day:"01", month:"DEC", time:"", venue:""});
+  DATA.levels[currentLevel].exams.push({code:"", name:"", date:"2026-12-01", day:"01", month:"DEC", time:"", venue:"", image:null});
   renderExams();
 }
 function removeExam(i){ DATA.levels[currentLevel].exams.splice(i,1); renderExams(); }
@@ -802,15 +920,28 @@ function hallCard(h,i){
       <div class="field"><span class="field-label">Location</span><input value="${h.loc}" data-f="loc"></div>
     </div>
     <div class="row"><div class="field"><span class="field-label">Note</span><textarea data-f="note">${h.note}</textarea></div></div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Photo (optional)</span>
+        <input type="file" accept="image/*" capture="environment" data-img="image">
+        ${h.image ? `<img src="${h.image}" style="max-width:140px; border-radius:6px; margin-top:6px; display:block;">` : ''}
+      </div>
+    </div>
     <div class="item-actions"><button class="btn btn-red btn-sm" onclick="removeHall(${i})">Remove</button></div>
   `;
   div.querySelectorAll('[data-f]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ h[inp.dataset.f] = inp.value; });
   });
+  div.querySelectorAll('[data-img]').forEach(inp=>{
+    inp.addEventListener('change', async ()=>{
+      const file = inp.files[0];
+      if(file){ h[inp.dataset.img] = await fileToDataUrl(file); showToast('Photo attached — remember to Save changes'); }
+    });
+  });
   return div;
 }
 function addHall(){
-  DATA.halls.push({name:"", type:"Traditional Hall", note:"", gender:"", loc:""});
+  DATA.halls.push({name:"", type:"Traditional Hall", note:"", gender:"", loc:"", image:null});
   renderHalls();
 }
 function removeHall(i){ DATA.halls.splice(i,1); renderHalls(); }
@@ -862,7 +993,7 @@ function removeUpdate(i){ DATA.updates.splice(i,1); renderUpdates(); }
 
 // ---------- SAVE CURRENT SECTION ----------
 function saveCurrentSection(){
-  if(currentPanel==='courses' || currentPanel==='exams' || currentPanel==='pastq'){
+  if(currentPanel==='exams' || currentPanel==='pastq'){
     saveSection('levels', DATA.levels);
   } else if(currentPanel==='news'){
     saveSection('news', DATA.news);
@@ -872,6 +1003,12 @@ function saveCurrentSection(){
     saveSection('updates', DATA.updates);
   } else if(currentPanel==='quicklinks'){
     saveSection('quickLinks', DATA.quickLinks);
+  } else if(currentPanel==='whatsapp'){
+    saveSection('whatsappGroups', DATA.whatsappGroups);
+  } else if(currentPanel==='videos'){
+    saveSection('videos', DATA.videos);
+  } else if(currentPanel==='ugfeed'){
+    saveSection('ugFeed', DATA.ugFeed);
   }
 }
 </script>

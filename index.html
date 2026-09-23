@@ -277,18 +277,19 @@
     padding:8px 15px; font-size:13px; font-weight:600; color:var(--ink-soft);
   }
   .day-tabs button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
-  .timetable-grid{display:grid; gap:12px;}
-  .tt-row{
-    display:grid; grid-template-columns:90px 1fr; gap:16px;
-    background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden;
-  }
-  .tt-time{
-    background:var(--navy); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:600;
-    display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 4px;
-  }
-  .tt-body{padding:12px 16px;}
-  .tt-body .course{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep);}
-  .tt-body .details{font-size:12.5px; color:var(--ink-soft); margin-top:3px; display:flex; gap:12px; flex-wrap:wrap;}
+  .wa-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+  .wa-card .name{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep);}
+  .wa-card .desc{font-size:13px; color:var(--ink-soft); margin-top:3px;}
+  .wa-join-btn{background:#25D366; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; text-decoration:none; white-space:nowrap;}
+  .video-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:12px;}
+  .video-card .name{font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--navy-deep); margin-bottom:4px;}
+  .video-card .desc{font-size:13px; color:var(--ink-soft); margin-bottom:10px;}
+  .video-card iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:8px;}
+  .video-card a.video-link{display:inline-block; background:var(--navy); color:#fff; padding:9px 16px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;}
+  .ug-live-card{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--red); border-radius:10px; padding:14px 16px; margin-bottom:10px;}
+  .ug-live-card .tag{font-size:10.5px; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:0.6px;}
+  .ug-live-card .title{font-family:var(--font-display); font-weight:600; font-size:14.5px; color:var(--navy-deep); margin:4px 0 6px;}
+  .ug-live-card a{color:var(--navy); font-size:12.5px; font-weight:600; text-decoration:none;}
   .pill{
     display:inline-block; font-family:var(--font-mono); font-size:10.5px; font-weight:600;
     padding:2px 8px; border-radius:20px; background:var(--bg); color:var(--navy); letter-spacing:.3px;
@@ -561,12 +562,13 @@
   <div class="navtabs">
     <div class="navtabs-inner" id="navtabs">
       <button data-page="dashboard" class="active">Dashboard</button>
-      <button data-page="timetable">Timetable</button>
       <button data-page="mytimetable">My Timetable</button>
       <button data-page="exams">Exams</button>
       <button data-page="pastq">Past Questions</button>
       <button data-page="register" id="regTabBtn">Registration Guide <span class="badge">L100</span></button>
       <button data-page="quicklinks">UG Quick Links</button>
+      <button data-page="whatsapp">WhatsApp Groups</button>
+      <button data-page="videos">Videos</button>
       <button data-page="news">News</button>
       <button data-page="updates">What's New</button>
       <button data-page="about">About Jarani</button>
@@ -593,11 +595,6 @@
 
     <p class="section-label">Academics &amp; Registration</p>
     <div class="grid-cards">
-      <div class="nav-card" data-goto="timetable">
-        <div class="icon">🗓️</div>
-        <h3>Timetable</h3>
-        <p>See your lecture, tutorial and lab schedule for the week, by day.</p>
-      </div>
       <div class="nav-card" data-goto="mytimetable">
         <span class="badge-new">Personal</span>
         <div class="icon">🎯</div>
@@ -629,6 +626,17 @@
         <h3>UG Quick Links</h3>
         <p>Official University of Ghana platforms — Portal, Sakai, Library, and more — in one place.</p>
       </div>
+      <div class="nav-card" data-goto="whatsapp">
+        <span class="badge-new">Join in</span>
+        <div class="icon">💬</div>
+        <h3>WhatsApp Groups</h3>
+        <p>Tap to join the group for your level or department — new information gets posted there first.</p>
+      </div>
+      <div class="nav-card" data-goto="videos">
+        <div class="icon">🎬</div>
+        <h3>Videos</h3>
+        <p>Helpful video walkthroughs — registration, hall allocation, and more.</p>
+      </div>
       <div class="nav-card" data-goto="news">
         <div class="icon">📢</div>
         <h3>PKAcademics Informs</h3>
@@ -645,20 +653,6 @@
         <p>The story behind PKAcademics, and why it exists.</p>
       </div>
     </div>
-
-    <p class="section-label">Today at a glance</p>
-    <div id="dashToday"></div>
-  </section>
-
-  <!-- TIMETABLE -->
-  <section class="page" id="page-timetable">
-    <div class="page-head">
-      <span class="eyebrow" id="ttLevelLabel">Level 100</span>
-      <h1 class="page-title">Weekly Timetable</h1>
-      <p class="page-desc">Sample lecture, tutorial and lab schedule. Swap in your department's real timetable once you have it.</p>
-    </div>
-    <div class="day-tabs" id="dayTabs"></div>
-    <div class="timetable-grid" id="ttGrid"></div>
   </section>
 
   <!-- EXAMS -->
@@ -727,6 +721,7 @@
       <h1 class="page-title">Latest School News</h1>
       <p class="page-desc">Course updates, deadlines and campus announcements, most recent first.</p>
     </div>
+    <div id="ugLiveList" style="margin-bottom:24px;"></div>
     <div class="day-tabs" id="newsCategoryTabs" style="margin-bottom:20px;"></div>
     <div class="news-list" id="newsList"></div>
   </section>
@@ -814,6 +809,24 @@
     </div>
   </section>
 
+
+  <!-- WHATSAPP GROUPS -->
+  <section class="page" id="page-whatsapp">
+    <div class="page-head">
+      <h1 class="page-title">WhatsApp Groups</h1>
+      <p class="page-desc">Join the group for your level or department. New information gets posted there first — tap a group to join.</p>
+    </div>
+    <div id="waList"></div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="page" id="page-videos">
+    <div class="page-head">
+      <h1 class="page-title">Videos</h1>
+      <p class="page-desc">Video walkthroughs — registration, hall allocation, and more.</p>
+    </div>
+    <div id="videoList"></div>
+  </section>
 
   <section class="page" id="page-about">
     <div class="page-head">
@@ -958,7 +971,6 @@ document.getElementById('logoutBtn').addEventListener('click', ()=>{
 // ===================== STATE =====================
 let currentLevel = "100";
 let currentPage = "dashboard";
-let currentDay = "Mon";
 let DATA = {};      // filled from /api/data -> DATA[level] = {courses, exams, pastQ}
 let NEWS = [];
 let HALLS = [];
@@ -969,6 +981,9 @@ let UPDATES = [];
 let APPEARANCE = {};
 let ABOUT = {};
 let QUICK_LINKS = [];
+let WHATSAPP_GROUPS = [];
+let VIDEOS = [];
+let UG_UPDATES = [];
 
 async function loadSiteData(){
   const res = await fetch('/api/data');
@@ -983,6 +998,9 @@ async function loadSiteData(){
   APPEARANCE = json.appearance || {};
   ABOUT = json.aboutJarani || {};
   QUICK_LINKS = json.quickLinks || [];
+  WHATSAPP_GROUPS = json.whatsappGroups || [];
+  VIDEOS = json.videos || [];
+  UG_UPDATES = json.ugUpdates || [];
   PROGRAMME_CATALOG = json.programmeCatalog || {};
   document.getElementById('gateBrandName').textContent = json.siteName;
   document.getElementById('gateBrandSub').textContent = json.poweredBy || json.tagline;
@@ -1040,67 +1058,6 @@ function renderDashboard(){
   document.getElementById('statCourses').textContent = new Set(lvl.courses.map(c=>c.code)).size;
   document.getElementById('statExams').textContent = lvl.exams.length;
   document.getElementById('statPQ').textContent = lvl.pastQ.reduce((a,c)=>a+c.years.length,0);
-
-  const today = document.getElementById('dashToday');
-  today.innerHTML = "";
-  const day = "Mon"; // sample "today"
-  const todays = lvl.courses.filter(c=>c.day===day);
-  if(todays.length===0){
-    today.appendChild(el(`<div class="empty-state">No classes scheduled — enjoy the free day.</div>`));
-  } else {
-    const grid = el(`<div class="grid-cards"></div>`);
-    todays.forEach(c=>{
-      grid.appendChild(el(`
-        <div class="index-card">
-          <span class="stamp">${day}</span>
-          <div class="code">${c.code}</div>
-          <div class="title">${c.name}</div>
-          <div class="meta-row">
-            <span>⏰ ${c.time}</span>
-            <span>📍 ${c.venue}</span>
-            <span class="pill ${c.type==='Lab'?'lab':c.type==='Tutorial'?'tut':''}">${c.type}</span>
-          </div>
-        </div>
-      `));
-    });
-    today.appendChild(grid);
-  }
-}
-
-function renderTimetable(){
-  document.getElementById('ttLevelLabel').textContent = `Level ${currentLevel}`;
-  const lvl = DATA[currentLevel];
-  const days = ["Mon","Tue","Wed","Thu","Fri"];
-  const dayTabs = document.getElementById('dayTabs');
-  dayTabs.innerHTML = "";
-  days.forEach(d=>{
-    const b = el(`<button data-day="${d}">${d==='Mon'?'Monday':d==='Tue'?'Tuesday':d==='Wed'?'Wednesday':d==='Thu'?'Thursday':'Friday'}</button>`);
-    if(d===currentDay) b.classList.add('active');
-    b.addEventListener('click', ()=>{ currentDay=d; renderTimetable(); });
-    dayTabs.appendChild(b);
-  });
-
-  const grid = document.getElementById('ttGrid');
-  grid.innerHTML = "";
-  const classes = lvl.courses.filter(c=>c.day===currentDay).sort((a,b)=>a.time.localeCompare(b.time));
-  if(classes.length===0){
-    grid.appendChild(el(`<div class="empty-state">No classes on this day for Level ${currentLevel}.</div>`));
-    return;
-  }
-  classes.forEach(c=>{
-    grid.appendChild(el(`
-      <div class="tt-row">
-        <div class="tt-time">${c.time}</div>
-        <div class="tt-body">
-          <div class="course">${c.code} — ${c.name}</div>
-          <div class="details">
-            <span class="pill ${c.type==='Lab'?'lab':c.type==='Tutorial'?'tut':''}">${c.type}</span>
-            <span>📍 ${c.venue}</span>
-          </div>
-        </div>
-      </div>
-    `));
-  });
 }
 
 function renderExams(){
@@ -1321,6 +1278,81 @@ function renderQuickLinks(){
       </a>
     `);
     grid.appendChild(card);
+  });
+}
+
+function renderWhatsapp(){
+  const wrap = document.getElementById('waList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  if(!WHATSAPP_GROUPS.length){
+    wrap.appendChild(el(`<div class="empty-state">No groups added yet — check back soon.</div>`));
+    return;
+  }
+  WHATSAPP_GROUPS.forEach(g=>{
+    wrap.appendChild(el(`
+      <div class="wa-card">
+        <div>
+          <div class="name">${g.name}</div>
+          ${g.description ? `<div class="desc">${g.description}</div>` : ''}
+        </div>
+        <a class="wa-join-btn" href="${g.link}" target="_blank" rel="noopener">💬 Join Group</a>
+      </div>
+    `));
+  });
+}
+
+function youtubeEmbedUrl(url){
+  try{
+    const u = new URL(url);
+    let id = "";
+    if(u.hostname.includes('youtu.be')) id = u.pathname.slice(1);
+    else if(u.searchParams.get('v')) id = u.searchParams.get('v');
+    else if(u.pathname.includes('/embed/')) id = u.pathname.split('/embed/')[1];
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch(e){ return null; }
+}
+
+function renderVideos(){
+  const wrap = document.getElementById('videoList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  if(!VIDEOS.length){
+    wrap.appendChild(el(`<div class="empty-state">No videos added yet — check back soon.</div>`));
+    return;
+  }
+  VIDEOS.forEach(v=>{
+    const embed = youtubeEmbedUrl(v.url);
+    wrap.appendChild(el(`
+      <div class="video-card">
+        <div class="name">${v.title}</div>
+        ${v.description ? `<div class="desc">${v.description}</div>` : ''}
+        ${embed
+          ? `<iframe src="${embed}" title="${v.title}" allowfullscreen></iframe>`
+          : `<a class="video-link" href="${v.url}" target="_blank" rel="noopener">▶ Watch video</a>`
+        }
+      </div>
+    `));
+  });
+}
+
+function renderUgLive(){
+  const wrap = document.getElementById('ugLiveList');
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  if(!UG_UPDATES.length){
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'block';
+  UG_UPDATES.slice(0, 6).forEach(item=>{
+    wrap.appendChild(el(`
+      <div class="ug-live-card">
+        <div class="tag">🔴 Official Source — ug.edu.gh</div>
+        <div class="title">${item.title}</div>
+        <a href="${item.url}" target="_blank" rel="noopener">Read more on ug.edu.gh →</a>
+      </div>
+    `));
   });
 }
 
@@ -1651,7 +1683,6 @@ function mtLogout(){
 
 function renderAll(){
   renderDashboard();
-  renderTimetable();
   renderExams();
   renderPastQ(document.getElementById('pqSearch').value);
   renderRegister();
@@ -1661,6 +1692,9 @@ function renderAll(){
   renderNews();
   renderUpdates();
   renderQuickLinks();
+  renderWhatsapp();
+  renderVideos();
+  renderUgLive();
   renderAbout();
   // toggle registration nav visibility badge relevance
   document.getElementById('regTabBtn').style.opacity = currentLevel==="100" ? "1" : "0.55";

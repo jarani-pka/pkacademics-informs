@@ -25,15 +25,97 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// ---------- UG live updates (sitemap watcher) ----------
+// This never copies article text — it only detects new article URLs from UG's own
+// sitemap and grabs the page's <title> so we can link out to the original, exactly
+// like an "Official Source" card. Nothing is scraped or reproduced beyond that.
+async function checkUgFeed() {
+  const data = readData();
+  if (!data.ugFeed) data.ugFeed = { lastChecked: null, lastError: null, seenUrls: [], items: [] };
+
+  const sitemapUrl = (data.settings.ugSitemapUrl || "https://www.ug.edu.gh/sitemap.xml").trim();
+  const pattern = (data.settings.ugNewsUrlPattern || "/news/").trim();
+
+  let xml;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    const resp = await fetch(sitemapUrl, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!resp.ok) throw new Error(`Sitemap request failed with status ${resp.status}`);
+    xml = await resp.text();
+  } catch (err) {
+    data.ugFeed.lastChecked = new Date().toISOString();
+    data.ugFeed.lastError = err.message || String(err);
+    writeData(data);
+    return { ok: false, error: data.ugFeed.lastError };
+  }
+
+  const allUrls = Array.from(xml.matchAll(/<loc>(.*?)<\/loc>/g)).map(m => m[1].trim());
+  const newsUrls = pattern ? allUrls.filter(u => u.includes(pattern)) : allUrls;
+
+  const seen = new Set(data.ugFeed.seenUrls || []);
+  const freshUrls = newsUrls.filter(u => !seen.has(u)).slice(0, 10); // cap per run, gentle on their server
+
+  const newItems = [];
+  for (const url of freshUrls) {
+    let title = decodeURIComponent(url.split("/").filter(Boolean).pop() || url)
+      .replace(/[-_]/g, " ")
+      .replace(/\.\w+$/, "");
+    try {
+      const controller2 = new AbortController();
+      const timer2 = setTimeout(() => controller2.abort(), 10000);
+      const pageResp = await fetch(url, { signal: controller2.signal });
+      clearTimeout(timer2);
+      const html = await pageResp.text();
+      const m = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+      if (m && m[1]) title = m[1].replace(/\s*[-|]\s*University of Ghana.*$/i, "").trim();
+    } catch (e) {
+      // couldn't fetch the page title — fall back to the slug-based title above
+    }
+    newItems.push({ title, url, dateFound: new Date().toISOString() });
+    seen.add(url);
+  }
+
+  data.ugFeed.items = [...newItems, ...(data.ugFeed.items || [])].slice(0, 30);
+  data.ugFeed.seenUrls = Array.from(seen).slice(-500);
+  data.ugFeed.lastChecked = new Date().toISOString();
+  data.ugFeed.lastError = null;
+  writeData(data);
+  return { ok: true, newCount: newItems.length, checkedCount: newsUrls.length };
+}
+
+// Hit by a free external scheduler (e.g. cron-job.org) on a timer. This both wakes a
+// sleeping free-tier Render instance and triggers the actual check. Protected by a
+// secret so randoms can't repeatedly trigger scraping of UG's site.
+app.get("/api/cron/check-ug-feed", async (req, res) => {
+  const data = readData();
+  const secret = data.settings.cronSecret;
+  if (secret && req.query.secret !== secret) {
+    return res.status(401).json({ error: "Missing or invalid secret." });
+  }
+  const result = await checkUgFeed();
+  res.json(result);
+});
+
+// Manual "Run check now" button in the admin panel.
+app.post("/api/admin/ug-feed/check", requireAdmin, async (req, res) => {
+  const result = await checkUgFeed();
+  res.json(result);
+});
+
 // ---------- public read-only endpoints ----------
 app.get("/api/data", (req, res) => {
   const data = readData();
-  // never expose the raw passwords to the public site, and never expose the student accounts list
-  const { settings, studentAccounts, ...rest } = data;
+  // never expose the raw passwords to the public site, never expose the student accounts list,
+  // and never expose ugFeed's internal tracking data (seenUrls, lastError, etc) — only the
+  // public-safe list of detected items goes out, as ugUpdates.
+  const { settings, studentAccounts, ugFeed, ...rest } = data;
   res.json({
     siteName: settings.siteName,
     tagline: settings.tagline,
     poweredBy: settings.poweredBy,
+    ugUpdates: (ugFeed && ugFeed.items) || [],
     ...rest,
   });
 });
